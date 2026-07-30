@@ -209,6 +209,19 @@
     padding:8px 12px;
     margin-top:10px;
   }
+  .compact-card{
+    padding:12px 14px 14px;
+    max-width:480px;
+  }
+  .compact-card h3{
+    font-size:12.5px;
+    color:var(--text-dim);
+    margin-bottom:8px;
+  }
+  .compact-card table{font-size:12px;}
+  .compact-card th{font-size:11px; padding:6px 8px;}
+  .compact-card td{padding:6px 8px;}
+  .compact-card .note{font-size:11.5px; padding:6px 10px;}
 
   table{
     width:100%;
@@ -713,8 +726,19 @@ const DATA = {
     fullName: "מור גמל ופנסיה בע\"מ",
     sections: [
       {
+        title: "פרטי חשבון בנק להפקדה (מעודכן מ-1.1.2025)",
+        type: "table",
+        columns: ["מוצר","בנק","סניף","מספר חשבון"],
+        rows: [
+          ["גמל, השתלמות וגמל להשקעה","31","046","943032"],
+          ["פנסיה מקיפה","31","046","940963"],
+          ["פנסיה כללית","31","046","942990"],
+        ]
+      },
+      {
         title: "קודי אוצר (ת.ה.)",
         type: "table",
+        compact: true,
         columns: ["מוצר","קוד אוצר (ת.ה.)"],
         rows: [
           ["מור אלפא תגמולים","8694"],
@@ -724,16 +748,6 @@ const DATA = {
           ["מור פנסיה כללית","13918"],
         ],
         note: "אלו קודי אוצר (ת.ה.) — לא קוד מוסד. קוד מוסד לא נמסר במסמך זה."
-      },
-      {
-        title: "פרטי חשבון בנק להפקדה (מעודכן מ-1.1.2025)",
-        type: "table",
-        columns: ["מוצר","בנק","סניף","מספר חשבון"],
-        rows: [
-          ["גמל, השתלמות וגמל להשקעה (אלפא קוד אוצר 8694 / השתלמות קוד אוצר 8700 / השקעה קוד אוצר 7956)","31","046","943032"],
-          ["פנסיה מקיפה (קוד אוצר 13908)","31","046","940963"],
-          ["פנסיה כללית (קוד אוצר 13918)","31","046","942990"],
-        ]
       }
     ],
     notes: [],
@@ -810,6 +824,56 @@ const DATA = {
       "הפקדות מתבצעות למסלול ברירת המחדל של הקופה (המסלול הכללי); הכספים ישוייכו לפי מסלול ההשקעה שנבחר בהצטרפות או המסלול הקיים בקופה.",
     ],
   },
+
+  menora: {
+    name: "מנורה מבטחים",
+    fullName: "מנורה מבטחים ביטוח בע\"מ",
+    sections: [
+      {
+        title: "פרטי חשבונות פנסיה, גמל והשתלמות",
+        type: "subgrouped",
+        note: "בכל הקבוצות: בנק 10, סניף 800.",
+        groups: [
+          {
+            subtitle: "מנורה מבטחים פנסיה (קוד מוסד 37891, תיק ניכויים 936300342)",
+            columns:["שם קרן הפנסיה","מ\"ה","חשבון עו\"ש"],
+            rows:[
+              ["מנורה מבטחים פנסיה (קרן מקיפה) — שכיר","168","29426272"],
+              ["מנורה מבטחים משלימה — שכיר","665","29426272"],
+              ["מנורה מבטחים פנסיה (קרן מקיפה) — עצמאי","168","29430972"],
+              ["מנורה מבטחים משלימה — עצמאי","665","29430972"],
+            ]
+          },
+          {
+            subtitle: "מנורה מבטחים גמל (קוד מוסד 59757, תיק ניכויים 935826529)",
+            columns:["שם קופ\"ג","מ\"ה","חשבון עו\"ש"],
+            rows:[
+              ["מור מנורה מבטחים לבני עד 50","9789 (1292)","21490996"],
+              ["מנורה מבטחים תגמולים ופיצויים לבני 50-60","9792 (826)","29618358"],
+              ["מנורה מבטחים אמיר כללי","260","29644848"],
+              ["מנורה מבטחים יותר ד'","119","29645551"],
+            ]
+          },
+          {
+            subtitle: "מנורה מבטחים גמל להשקעה (תיק ניכויים 935366286)",
+            columns:["שם קופ\"ג","מ\"ה","חשבון עו\"ש"],
+            rows:[
+              ["מנורה מבטחים גמל להשקעה","8675","21636108"],
+            ]
+          },
+          {
+            subtitle: "מנורה מבטחים קרן השתלמות (תיק ניכויים 935825711)",
+            columns:["שם קה\"ש","מ\"ה","חשבון עו\"ש"],
+            rows:[
+              ["מנורה מבטחים השתלמות מסלול כללי","828","21490406"],
+              ["אומגה קרן השתלמות","286","29617361"],
+            ]
+          }
+        ]
+      }
+    ],
+    notes: [],
+  },
 };
 
 const MISSING = [];
@@ -818,7 +882,7 @@ const MISSING = [];
 
 const nav = document.getElementById('companyNav');
 const mainArea = document.getElementById('mainArea');
-const order = ["clal","altshuler","analyst","yelin","migdal","meitav","phoenix","mor","ayalon","hachshara","harel"];
+const order = ["clal","altshuler","analyst","yelin","migdal","meitav","phoenix","mor","ayalon","hachshara","harel","menora"];
 
 function renderNav(){
   order.forEach((key,i)=>{
@@ -911,7 +975,7 @@ function renderCompany(key){
 
   c.sections.forEach(sec=>{
     const card = document.createElement('div');
-    card.className = 'card';
+    card.className = 'card' + (sec.compact ? ' compact-card' : '');
     card.dataset.search = (sec.title||'').toLowerCase();
     const h3 = document.createElement('h3');
     h3.innerHTML = `<span class="dot"></span>${sec.title}`;
@@ -1021,6 +1085,16 @@ searchBox.addEventListener('input', ()=>{
   });
   if(firstMatchKey) selectCompany(firstMatchKey);
 });
+
+// ---------- prefill search from URL (?q=...) so a link can jump straight to an account number ----------
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q');
+  if(q){
+    searchBox.value = q;
+    searchBox.dispatchEvent(new Event('input'));
+  }
+})();
 </script>
 
 </body>
