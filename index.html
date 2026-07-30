@@ -316,6 +316,77 @@
 
   .hidden-row{display:none !important;}
 
+  .landing-grid{
+    display:none;
+  }
+  .landing-grid.active{
+    display:block;
+  }
+  .landing-grid h2{
+    color:var(--navy);
+    font-size:19px;
+    margin:0 0 4px;
+  }
+  .landing-grid .landing-sub{
+    color:var(--text-dim);
+    font-size:13.5px;
+    margin-bottom:20px;
+  }
+  .landing-cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:12px;
+  }
+  .landing-cards button{
+    all:unset;
+    cursor:pointer;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px 14px;
+    text-align:center;
+    font-weight:700;
+    font-size:14.5px;
+    color:var(--text);
+    transition:transform .12s, box-shadow .12s, border-color .12s;
+  }
+  .landing-cards button:hover{
+    border-color:var(--gold);
+    box-shadow:0 4px 14px rgba(15,41,66,.1);
+    transform:translateY(-2px);
+  }
+  .landing-cards button.all-card{
+    grid-column:1 / -1;
+    background:linear-gradient(120deg,var(--navy) 0%,var(--navy-2) 100%);
+    color:#fff;
+    font-size:15.5px;
+  }
+  .landing-cards button.all-card:hover{border-color:var(--gold-light);}
+
+  .back-to-menu{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    cursor:pointer;
+    font-size:13px;
+    color:var(--navy-2);
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:7px 14px;
+    margin-bottom:14px;
+    font-weight:600;
+  }
+  .back-to-menu:hover{background:var(--bg);}
+
+  .all-companies-view .company-panel{
+    display:block !important;
+    margin-bottom:6px;
+    padding-bottom:18px;
+    border-bottom:2px solid var(--line);
+  }
+  .all-companies-view .company-panel:last-child{border-bottom:none;}
+
   footer{
     text-align:center;
     font-size:12px;
@@ -331,7 +402,7 @@
 <header>
   <div class="inner">
     <div>
-      <h1>מחולל קודי מוסד ופרטי חשבון</h1>
+      <h1 id="homeLink" style="cursor:pointer;">מחולל קודי מוסד ופרטי חשבון</h1>
       <div class="sub">קפלן דהאן — ביטוח ופיננסים | רפרנטית</div>
     </div>
     <div class="search-wrap">
@@ -908,11 +979,22 @@ const mainArea = document.getElementById('mainArea');
 const order = ["clal","altshuler","analyst","yelin","migdal","meitav","phoenix","mor","ayalon","hachshara","harel","menora"];
 
 function renderNav(){
-  order.forEach((key,i)=>{
+  const allBtn = document.createElement('button');
+  allBtn.textContent = "כל החברות";
+  allBtn.dataset.key = "__all__";
+  allBtn.style.background = 'var(--navy)';
+  allBtn.style.color = '#fff';
+  allBtn.addEventListener('click', ()=> selectAll());
+  nav.appendChild(allBtn);
+
+  const navDivider = document.createElement('div');
+  navDivider.className = 'divider';
+  nav.appendChild(navDivider);
+
+  order.forEach((key)=>{
     const btn = document.createElement('button');
     btn.textContent = DATA[key].name;
     btn.dataset.key = key;
-    if(i===0) btn.classList.add('active');
     btn.addEventListener('click', ()=> selectCompany(key));
     nav.appendChild(btn);
   });
@@ -991,6 +1073,12 @@ function renderCompany(key){
   panel.id = 'panel-'+key;
   panel.dataset.key = key;
 
+  const backBtn = document.createElement('div');
+  backBtn.className = 'back-to-menu';
+  backBtn.innerHTML = '→ חזרה לתפריט';
+  backBtn.addEventListener('click', showLanding);
+  panel.appendChild(backBtn);
+
   const head = document.createElement('div');
   head.className = 'company-head';
   head.innerHTML = `<h2>${c.name}</h2><span class="tag">${c.fullName}</span>`;
@@ -1068,6 +1156,8 @@ function renderCompany(key){
 }
 
 function selectCompany(key){
+  mainArea.classList.remove('all-companies-view');
+  landing.classList.remove('active');
   document.querySelectorAll('nav.companies button').forEach(b=>{
     b.classList.toggle('active', b.dataset.key === key);
   });
@@ -1076,9 +1166,53 @@ function selectCompany(key){
   });
 }
 
+function selectAll(){
+  landing.classList.remove('active');
+  mainArea.classList.add('all-companies-view');
+  document.querySelectorAll('nav.companies button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.key === '__all__');
+  });
+  document.querySelectorAll('.company-panel').forEach(p=>{
+    p.classList.add('active');
+  });
+}
+
+function showLanding(){
+  mainArea.classList.remove('all-companies-view');
+  document.querySelectorAll('nav.companies button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.company-panel').forEach(p=>p.classList.remove('active'));
+  landing.classList.add('active');
+}
+
+// build landing menu
+const landing = document.createElement('div');
+landing.id = 'landingMenu';
+landing.className = 'landing-grid';
+landing.innerHTML = `
+  <h2>בחרי חברה</h2>
+  <div class="landing-sub">או צפי בכל החברות ברצף אחד</div>
+`;
+const cardsWrap = document.createElement('div');
+cardsWrap.className = 'landing-cards';
+const allCard = document.createElement('button');
+allCard.className = 'all-card';
+allCard.textContent = 'כל החברות';
+allCard.addEventListener('click', selectAll);
+cardsWrap.appendChild(allCard);
+order.forEach(key=>{
+  const card = document.createElement('button');
+  card.textContent = DATA[key].name;
+  card.addEventListener('click', ()=> selectCompany(key));
+  cardsWrap.appendChild(card);
+});
+landing.appendChild(cardsWrap);
+mainArea.appendChild(landing);
+
+document.getElementById('homeLink').addEventListener('click', showLanding);
+
 renderNav();
 order.forEach(renderCompany);
-selectCompany(order[0]);
+showLanding();
 
 // ---------- search ----------
 const searchBox = document.getElementById('searchBox');
