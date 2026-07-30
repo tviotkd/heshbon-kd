@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מחולל קודי מוסד ופרטי חשבון | קפלן דהאן</title>
+<style>
+  :root{
+    --navy:#0f2942;
+    --navy-2:#16385a;
+    --gold:#b98a3d;
+    --gold-light:#e8c58a;
+    --bg:#f4f6f8;
+    --card:#ffffff;
+    --line:#e1e6ea;
+    --text:#1c2b38;
+    --text-dim:#5b6b78;
+    --green:#2f7a4f;
+    --green-bg:#eaf6ef;
+    --red:#b3432b;
+    --red-bg:#fdecE8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Segoe UI','Arial Hebrew','Heebo',Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  header{
+    background:linear-gradient(120deg,var(--navy) 0%,var(--navy-2) 100%);
+    color:#fff;
+    padding:28px 20px 24px;
+    position:sticky;
+    top:0;
+    z-index:50;
+    box-shadow:0 2px 12px rgba(0,0,0,.15);
+  }
+  header .inner{
+    max-width:1100px;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  header h1{
+    margin:0;
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:.2px;
+  }
+  header .sub{
+    font-size:13px;
+    color:var(--gold-light);
+    margin-top:4px;
+    font-weight:500;
+  }
+  .search-wrap{
+    position:relative;
+    min-width:260px;
+    flex:0 0 auto;
+  }
+  .search-wrap input{
+    width:100%;
+    padding:11px 40px 11px 14px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    font-size:14px;
+    outline:none;
+  }
+  .search-wrap input::placeholder{color:rgba(255,255,255,.55);}
+  .search-wrap input:focus{
+    border-color:var(--gold-light);
+    background:rgba(255,255,255,.14);
+  }
+  .search-wrap svg{
+    position:absolute;
+    left:12px;
+    top:50%;
+    transform:translateY(-50%);
+    opacity:.6;
+  }
+
+  .layout{
+    max-width:1100px;
+    margin:0 auto;
+    padding:22px 18px 60px;
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:22px;
+    align-items:start;
+  }
+  @media (max-width:800px){
+    .layout{grid-template-columns:1fr;}
+  }
+
+  nav.companies{
+    position:sticky;
+    top:112px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px;
+  }
+  @media (max-width:800px){
+    nav.companies{
+      position:static;
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+    }
+  }
+  nav.companies button{
+    all:unset;
+    cursor:pointer;
+    padding:10px 12px;
+    border-radius:9px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text);
+    text-align:center;
+    transition:background .15s,color .15s;
+  }
+  nav.companies button:hover{background:var(--bg);}
+  nav.companies button.active{
+    background:var(--navy);
+    color:#fff;
+  }
+  nav.companies .missing-btn{
+    color:var(--text-dim);
+    font-weight:500;
+    font-size:12.5px;
+    cursor:default;
+  }
+  nav.companies .missing-btn:hover{background:none;}
+  nav.companies .divider{
+    border-top:1px solid var(--line);
+    margin:6px 4px;
+  }
+  nav.companies .group-label{
+    font-size:11px;
+    color:var(--text-dim);
+    padding:6px 10px 2px;
+    font-weight:700;
+    letter-spacing:.3px;
+  }
+
+  main{min-width:0;}
+
+  .company-panel{display:none;}
+  .company-panel.active{display:block; animation:fadeIn .18s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+  .company-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .company-head h2{
+    margin:0;
+    font-size:21px;
+    color:var(--navy);
+  }
+  .company-head .tag{
+    font-size:12px;
+    background:var(--gold);
+    color:#fff;
+    padding:4px 10px;
+    border-radius:20px;
+    font-weight:700;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 18px 20px;
+    margin-bottom:16px;
+  }
+  .card h3{
+    margin:0 0 12px;
+    font-size:15px;
+    color:var(--navy-2);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .card h3 .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--gold);
+    display:inline-block;
+  }
+  .card .note{
+    font-size:13px;
+    color:var(--text-dim);
+    background:var(--bg);
+    border-radius:8px;
+    padding:8px 12px;
+    margin-top:10px;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.5px;
+  }
+  th,td{
+    padding:9px 10px;
+    text-align:right;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  th{
+    color:var(--text-dim);
+    font-weight:700;
+    font-size:12.5px;
+    background:var(--bg);
+    position:sticky;
+    top:0;
+  }
+  tr:last-child td{border-bottom:none;}
+  td.code, td.acct{
+    font-variant-numeric:tabular-nums;
+    font-family:'Consolas','Courier New',monospace;
+    font-weight:700;
+    color:var(--navy);
+    direction:ltr;
+    text-align:left;
+    unicode-bidi:plaintext;
+  }
+  .table-scroll{overflow-x:auto;}
+
+  .subgroup{margin-top:14px;}
+  .subgroup > .subtitle{
+    font-size:13px;
+    font-weight:700;
+    color:var(--text);
+    margin:14px 0 8px;
+    padding-right:10px;
+    border-right:3px solid var(--gold);
+  }
+
+  .copy-btn{
+    all:unset;
+    cursor:pointer;
+    font-size:11px;
+    color:var(--navy-2);
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:2px 7px;
+    margin-right:6px;
+    font-family:inherit;
+    font-weight:600;
+  }
+  .copy-btn:hover{background:#e6ecf1;}
+  .copy-btn.copied{background:var(--green-bg); color:var(--green); border-color:var(--green);}
+
+  .links-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
+  }
+  .links-row a{
+    font-size:12.5px;
+    color:var(--navy-2);
+    background:var(--bg);
+    border:1px solid var(--line);
+    padding:6px 12px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:600;
+  }
+  .links-row a:hover{background:#e6ecf1;}
+
+  .missing-panel .card{border-style:dashed;}
+  .missing-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
+  }
+  .missing-list span{
+    background:var(--red-bg);
+    color:var(--red);
+    font-size:13px;
+    font-weight:700;
+    padding:6px 14px;
+    border-radius:20px;
+  }
+
+  .hidden-row{display:none !important;}
+
+  footer{
+    text-align:center;
+    font-size:12px;
+    color:var(--text-dim);
+    padding:20px;
+  }
+
+  ::selection{background:var(--gold-light);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <div>
+      <h1>מחולל קודי מוסד ופרטי חשבון</h1>
+      <div class="sub">קפלן דהאן — ביטוח ופיננסים | רפרנטית</div>
+    </div>
+    <div class="search-wrap">
+      <input id="searchBox" type="text" placeholder="חיפוש: חברה, מוצר, קוד מוסד או מספר חשבון...">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="companies" id="companyNav"></nav>
+  <main id="mainArea"></main>
+</div>
+
+<footer>מחולל פנימי לשימוש נציגי קפלן דהאן • הנתונים מבוססים על מסמכים שהתקבלו מהחברות המנהלות • יש לוודא מול המסמך המקורי לפני העברות בסכומים גדולים</footer>
+
+<script>
+const DATA = {
+  clal: {
+    name: "כלל",
+    fullName: "כלל ביטוח ופנסיה",
+    sections: [
+      {
+        title: "קודי מוסד — הלוואות והפקדות",
+        type: "table",
+        columns: ["מוצר","קוד מוסד להלוואות","קוד מוסד להפקדות (ח.פ/שותף)"],
+        rows: [
+          ["פיננסים ביטוח חיים","27381","628"],
+          ["גמל תמר","45453","46127"],
+          ["גמל להשקעה","40917","7342"],
+          ["השתלמות","27289","27289"],
+          ["פנסיה","30621","29037"],
+          ["פנסיה משלימה","אין הלוואות","29037"],
+        ]
+      }
+    ],
+    notes: ["המקור: טבלת קודי מוסד ביטוח, פנסיה וגמל שהתקבלה מכלל."]
+  },
+
+  altshuler: {
+    name: "אלטשולר שחם",
+    fullName: "אלטשולר שחם גמל ופנסיה בע\"מ",
+    sections: [
+      {
+        title: "קודי מוסד להקמת הרשאה",
+        type: "table",
+        columns: ["מוצר","קוד מוסד"],
+        rows: [
+          ["השתלמות","37696"],
+          ["גמל וגמל להשקעה","37695"],
+          ["פנסיה מקיפה וכללית","46990"],
+        ]
+      },
+      {
+        title: "מספרי חשבון להעברה בנקאית לפי מוצר",
+        type: "table",
+        columns: ["מוצר","בנק / סניף","מספר חשבון"],
+        rows: [
+          ["קרן השתלמות","לאומי (10) / 800","214971/91"],
+          ["קופת גמל","לאומי (10) / 800","214970/93"],
+          ["חיסכון פלוס (קופת גמל להשקעה)","לאומי (10) / 800","299479/22"],
+          ["פנסיה מקיפה","לאומי (10) / 800","299294/34"],
+          ["פנסיה כללית","לאומי (10) / 800","299299/24"],
+        ]
+      }
+    ],
+    links: [
+      {label:"הנחיות הוראת קבע — אתר אלטשולר שחם", url:"https://www.as-invest.co.il/interstedin/gemel/standing_order_deposit/"}
+    ],
+    notes: []
+  },
+
+  analyst: {
+    name: "אנליסט",
+    fullName: "אנליסט קופות גמל בע\"מ",
+    sections: [
+      {
+        title: "קודי מוסד להפקדה (הוראת קבע)",
+        type: "table",
+        columns: ["מוצר","קוד מוסד"],
+        rows: [
+          ["קופת גמל להשקעה","07143"],
+          ["קופת גמל לחיסכון","56823"],
+          ["קרן השתלמות","56816"],
+        ]
+      },
+      {
+        title: "חשבונות עו״ש לפי מסלול השקעה — הפקדה בהעברה בנקאית",
+        type: "subgrouped",
+        note: "כל ההעברות מתבצעות לבנק לאומי (10), סניף 800. לאחר ביצוע ההעברה יש להעביר אסמכתא בנקאית מלאה למייל gemel@analyst.co.il בלבד.",
+        groups: [
+          {
+            subtitle: "קופת גמל להשקעה",
+            columns:["מסלול","חשבון","מספר מסלול בנגה","מ\"ה"],
+            rows:[
+              ["אנליסט גמל להשקעה כללי","29654452","1189","7834"],
+              ["אנליסט גמל להשקעה מניות","29654550","1190","7836"],
+              ["אנליסט גמל להשקעה אשראי ואג\"ח","29654648","1191","7837"],
+              ["אנליסט גמל להשקעה כספי (שקלי)","29654746","1192","7839"],
+              ["אנליסט גמל להשקעה עוקב מדד S&P500","29638840","1750","13854"],
+              ["אנליסט גמל להשקעה משולב סחיר","29654844","1193","7842"],
+              ["אנליסט גמל להשקעה אשראי ואג\"ח עד 25% מניות","29655057","1195","7986"],
+              ["אנליסט גמל להשקעה עוקב מדדים גמיש","29654942","1194","7843"],
+              ["אנליסט גמל להשקעה עוקב מדדי מניות","21908591","1847","15309"],
+            ]
+          },
+          {
+            subtitle: "קרן השתלמות",
+            columns:["מסלול","חשבון","מספר מסלול בנגה","מ\"ה"],
+            rows:[
+              ["אנליסט השתלמות כללי","29656446","1199","962"],
+              ["אנליסט השתלמות מניות","29656544","1200","963"],
+              ["אנליסט השתלמות אשראי ואג\"ח","29656642","1201","972"],
+              ["אנליסט השתלמות אג\"ח ממשלות","29656740","1202","973"],
+              ["אנליסט השתלמות כספי (שקלי)","29656838","1203","1535"],
+              ["אנליסט השתלמות משולב סחיר","29657247","1206","8779"],
+              ["אנליסט השתלמות עוקב מדד S&P500","29638742","1749","13853"],
+              ["אנליסט השתלמות אשראי ואג\"ח עד 25% מניות","29657051","1205","8679"],
+              ["אנליסט השתלמות עוקב מדדים גמיש","21908395","1849","15311"],
+              ["אנליסט השתלמות עוקב מדדי מניות","21908493","1848","15312"],
+            ]
+          },
+          {
+            subtitle: "קופת גמל",
+            columns:["מסלול","חשבון","מספר מסלול בנגה","מ\"ה"],
+            rows:[
+              ["אנליסט גמל אשראי ואג\"ח","29655449","1180","813"],
+              ["אנליסט גמל מניות","29655547","1181","814"],
+              ["אנליסט גמל כספי (שקלי)","29655645","1182","815"],
+              ["אנליסט גמל מניות סחיר","29655743","1183","817"],
+              ["אנליסט גמל משולב סחיר","29655841","1184","818"],
+              ["אנליסט גמל אג\"ח ממשלות","29655939","1207","1412"],
+              ["אנליסט גמל לבני 50 ומטה","29655351","1186","9730"],
+              ["אנליסט גמל לבני 50-60","29656250","1187","9731"],
+              ["אנליסט גמל לבני 60 ומעלה","29656348","1188","9732"],
+              ["אנליסט גמל עוקב מדד S&P500","29638644","1751","13855"],
+              ["אנליסט גמל עוקב מדדים גמיש","21855977","1788","14279"],
+              ["אנליסט גמל עוקב מדדי מניות","21908297","1850","15310"],
+            ]
+          }
+        ]
+      }
+    ],
+    notes: ["אנליסט קופות גמל בע\"מ עוסקת בשיווק פנסיוני (ולא בייעוץ). אין באמור לעיל משום ייעוץ/שיווק פנסיוני."]
+  },
+
+  yelin: {
+    name: "ילין לפידות",
+    fullName: "ילין לפידות ניהול קופות גמל בע\"מ",
+    sections: [
+      {
+        title: "פרטי חשבון להפקדה — לפי מוצר",
+        type: "table",
+        columns: ["מוצר","בנק","סניף","מספר חשבון"],
+        rows: [
+          ["קרן השתלמות","לאומי","800","21495687"],
+          ["קופת גמל","לאומי","800","21495589"],
+        ]
+      },
+      {
+        title: "קופת גמל להשקעה — חשבון לפי מסלול",
+        type: "table",
+        columns: ["מסלול","חשבון","בנק / סניף"],
+        rows: [
+          ["ילין לפידות קופת גמל להשקעה — מסלול כללי","29982333","לאומי / 800"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול אשראי ואג\"ח","29982627","לאומי / 800"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול אשראי ואג\"ח עם מניות (עד 25% מניות)","29982529","לאומי / 800"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול אג\"ח ממשלות","29982725","לאומי / 800"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול מניות","29982431","לאומי / 800"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול עוקב מדדים גמיש","21857579","לאומי / 800"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול עוקב מדד S&P 500","21914795","לאומי / 800"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול מניות סחיר","21937386","לאומי / 800"],
+        ]
+      }
+    ],
+    notes: [
+      "תקרת הפקדה לקופת גמל להשקעה לעמית (ברמת ת.ז) לשנת 2026: 83,641.09 ₪.",
+      "הפקדה בהמחאה: לפקודת \"ילין לפידות ניהול קופות גמל בע״מ\", לשלוח למשרדי החברה: מגדל-על, דיזנגוף סנטר 50, תל אביב, מיקוד 6433222 — לא יאוחר מ-5 ימי עסקים לפני תום שנת הכספים.",
+      "הפקדה בהעברה בנקאית: יש לציין בפרטי ההעברה את מספר ת.ז של העמית, ולשלוח אסמכתא + שם העמית + ת.ז + מספר חשבון למייל hafkadot@yl-invest.co.il — לא יאוחר משני ימי עסקים לפני תום שנת הכספים.",
+    ],
+    links: [
+      {label:"אתר ילין לפידות", url:"https://www.yl-invest.co.il"},
+      {label:"מייל הצטרפות סוכנים", url:"mailto:extagents@yl-invest.co.il"},
+      {label:"מייל דיווח הפקדות", url:"mailto:hafkadot@yl-invest.co.il"},
+    ]
+  },
+
+  migdal: {
+    name: "מגדל",
+    fullName: "מגדל חברה לביטוח בע\"מ | מגדל מקפת קרנות פנסיה וקופות גמל בע\"מ",
+    sections: [
+      {
+        title: "פרטי חשבון להעברת הפקדות והמחאות — לפי תוכנית",
+        type: "subgrouped",
+        note: "בכל שלושת החשבונות: בנק לאומי (10), סניף 800.",
+        groups: [
+          {
+            subtitle: "מגדל חברה לביטוח בע\"מ (ח.פ 520004896, תיק ניכויים 930000948)",
+            columns:["סוג מוצר","תוכנית","מספר אוצר","חשבון"],
+            rows:[
+              ["ביטוח","מגדל קשת","0","שקלי: 241775/88 | מט\"ח: 241775/08"],
+            ],
+            note: "כתובת למשלוח המחאות: בית דואר הראשונים, פתח תקווה, ת.ד. 9466, מיקוד 4919401."
+          },
+          {
+            subtitle: "מגדל מקפת קרנות פנסיה וקופות גמל בע\"מ — מקפת (ח.פ 512237744, תיק ניכויים 935967851)",
+            columns:["סוג מוצר","תוכנית","מספר אוצר","חשבון"],
+            rows:[
+              ["קרן פנסיה","מגדל מקפת אישית","162","293842/59"],
+              ["קרן פנסיה","מגדל מקפת משלימה","659","293842/59"],
+            ],
+            note: "כתובת למשלוח המחאות: בית דואר הראשונים, פתח תקווה, ת.ד. 9467, מיקוד 4919401."
+          },
+          {
+            subtitle: "מגדל מקפת קרנות פנסיה וקופות גמל בע\"מ — השתלמות/גמל (ח.פ 512237744, תיק ניכויים 935967950)",
+            columns:["סוג מוצר","תוכנית","מספר אוצר","חשבון"],
+            rows:[
+              ["קרן השתלמות","מגדל השתלמות","579","299206/57"],
+              ["קופת גמל לתגמולים ואישית לפיצויים","מגדל לתגמולים ולפיצויים","744","299206/57"],
+              ["קופת גמל לדמי מחלה","מגדל מקפת דמי מחלה","1161","299206/57"],
+              ["קופת גמל מרכזית להשתתפות בפנסיה תקציבית","מקפת תקציבית","1304","299206/57"],
+              ["קופת גמל לא משלמת לקצבה / קופת גמל לתגמולים ואישית לפיצויים","מגדל לתגמולים בניהול אישי","8887","299206/57"],
+              ["קרן השתלמות","מגדל השתלמות בניהול אישי","8889","299206/57"],
+            ],
+            note: "כתובת למשלוח המחאות: בית דואר הראשונים, פתח תקווה, ת.ד. 9522, מיקוד 4919401."
+          }
+        ]
+      },
+      {
+        title: "קודי מוסד — ביטוח מנהלים / פנסיה (מקפת)",
+        type: "subgrouped",
+        groups: [
+          {
+            subtitle: "ביטוח מנהלים (מס' אוצר בשוק ההון: 520004896)",
+            columns:["תיאור מוטב","מספר מוטב","סמל קופה במל\"מ"],
+            rows:[
+              ["מנהלים — שכר יסוד","3817","576"],
+              ["מנהלים — עבודה נוספת","2421","8576"],
+              ["מנהלים — החזר הוצאות","3501","5134"],
+            ]
+          },
+          {
+            subtitle: "פנסיה (מקפת) (מס' אוצר בשוק ההון: 162)",
+            columns:["תיאור מוטב","מספר מוטב","סמל קופה במל\"מ"],
+            rows:[
+              ["פנסיה — שכר יסוד","3602","545"],
+              ["פנסיה — עבודה נוספת","3642","8481"],
+              ["פנסיה — החזר הוצאות","9251","5315"],
+            ]
+          },
+          {
+            subtitle: "פנסיה משלימה (מס' אוצר בשוק ההון: 659)",
+            columns:["תיאור מוטב","מספר מוטב","סמל קופה במל\"מ"],
+            rows:[
+              ["פנסיה משלימה — שכר יסוד","3886","371"],
+              ["פנסיה משלימה — עבודה נוספת","8130","8251"],
+              ["פנסיה משלימה — החזר הוצאות","9645","5354"],
+            ]
+          }
+        ]
+      }
+    ],
+    notes: [],
+  },
+
+  meitav: {
+    name: "מיטב",
+    fullName: "מיטב גמל ופנסיה בע\"מ",
+    sections: [
+      {
+        title: "קודי מוסד להקמת הרשאה לחיוב חשבון",
+        type: "table",
+        columns: ["מוצר","קוד מוסד"],
+        rows: [
+          ["קופת גמל להשקעה","עמית עצמאי: 07267"],
+          ["קופת גמל / קרן השתלמות","עמית עצמאי / מעסיק: 39976"],
+          ["קופת גמל בניהול אישי / קרן השתלמות בניהול אישי","עמית עצמאי / מעסיק: 54334"],
+          ["מיטב פנסיה מקיפה","עמית עצמאי / מעסיק: 28452, מעסיק המדווח בממשק מעסיקים: 2287"],
+          ["מיטב פנסיה כללית","עמית עצמאי / מעסיק: 46769"],
+        ],
+        note: "יש להקים הרשאה לחיוב חשבון בבנק לפי קוד המוסד המתאים, ולצרף אסמכתא + טופס \"הרשאה לחיוב חשבון\"."
+      },
+      {
+        title: "חשבונות בנק להפקדה",
+        type: "subgrouped",
+        note: "שם המוטב להפקדה: מיטב גמל ופנסיה בע\"מ / Meitav Gemel and Pension LTD. לאחר ביצוע הפקדה יש לדווח עליה באמצעות הלינק המתאים באתר מיטב.",
+        groups: [
+          {
+            subtitle: "למפקידים דרך כל הבנקים (למעט בנק מזרחי)",
+            columns:["מוצר","בנק","סניף","חשבון"],
+            rows:[
+              ["פנסיה מקיפה","20 - מזרחי","461","193447"],
+              ["פנסיה כללית","20 - מזרחי","461","193749"],
+              ["קופת גמל","20 - מזרחי","638","100107"],
+              ["קרן השתלמות","20 - מזרחי","638","133747"],
+              ["קופת גמל להשקעה","20 - מזרחי","631","680726"],
+            ]
+          },
+          {
+            subtitle: "למפקידים דרך בנק מזרחי",
+            columns:["מוצר","בנק","סניף","חשבון"],
+            rows:[
+              ["פנסיה מקיפה","20 - מזרחי","461","193447"],
+              ["פנסיה כללית","20 - מזרחי","461","193749"],
+              ["קופת גמל","20 - מזרחי","461","416365"],
+              ["קרן השתלמות","20 - מזרחי","461","475479"],
+              ["קופת גמל להשקעה","20 - מזרחי","461","595016"],
+            ]
+          }
+        ]
+      },
+      {
+        title: "תקרות הפקדה לפי מוצר — שנת 2026 (הטבות מס)",
+        type: "table",
+        columns: ["מוצר","תקרה"],
+        rows: [
+          ["קרן השתלמות — עצמאי","20,566 ₪ לשנה (לעניין פטור ממס)"],
+          ["קופת גמל — עצמאי","38,412 ₪ לשנה"],
+          ["קופת גמל להשקעה","83,641 ₪ לשנה"],
+        ]
+      }
+    ],
+    notes: []
+  },
+
+  phoenix: {
+    name: "הפניקס",
+    fullName: "הפניקס חברה לביטוח / הפניקס פנסיה וגמל",
+    sections: [
+      {
+        title: "קוד מוסד כללי",
+        type: "table",
+        columns: ["מוצר","קוד מוסד"],
+        rows: [
+          ["הכל מלבד גמל והשתלמות","611"],
+          ["גמל והשתלמות","8234"],
+        ]
+      },
+      {
+        title: "פרטי חשבונות בנק להפקדות — לפי חברה מנהלת",
+        type: "subgrouped",
+        note: "גמל — מייל לשליחת העתקי הפקדות: Hafkadot@fnx.co.il | ביטוח, פנסיה — מייל לשליחת העתקי הפקדות: hafkada@fnx.co.il",
+        groups: [
+          {
+            subtitle: "הפניקס חברה לביטוח בע\"מ (ח.פ 520023185)",
+            columns:["סוג מוצר","מסלול","מספר תיק ניכויים","בנק לביצוע הפקדות"],
+            rows:[
+              ["ביטוח","—","930638713","10-800 / 21181520"],
+              ["פנסיה","לחיים","930638713","12-600 / 546725"],
+            ],
+            note: "ביטוח: בביטוחים מנוהלים לא נדרש קוד אישור באוצר — יש לדווח מספר ח.פ חברה מנהלת ואפסים. פנסיה (לחיים): יש להעביר העתק המחאה בנקאית הכולל שם מבוטח + ת.ז לפקס 03-7337976 או finance@fnx.co.il לצורך שיוך הכספים."
+          },
+          {
+            subtitle: "הפניקס פנסיה וגמל (ח.פ 513026484)",
+            columns:["סוג מוצר","מסלול קופה","מספר אישור קופה באוצר","מספר תיק ניכויים","בנק לביצוע הפקדות"],
+            rows:[
+              ["פנסיה מקיפה","הפניקס פנסיה מקיפה","209","935217323","12-600 / 678680"],
+              ["פנסיה כללית","הפניקס פנסיה כללית","671","935973446","12-600 / 678680"],
+              ["פנסיה ותיקה","עמית ותיקה","347","935730499","12-600 / 678680"],
+              ["גמל","הפניקס גמל","102","924640592","20-409 / 136053"],
+              ["השתלמות","הפניקס השתלמות","399","935825745","20-461 / 644947"],
+              ["גמל להשקעה","הפניקס גמל להשקעה","7904","924640527","20-461 / 586696"],
+            ]
+          }
+        ]
+      },
+      {
+        title: "קודי אקסלנס (מספרי מל\"מ / באוצר נוספים)",
+        type: "table",
+        columns: ["שם הקופה","מספר מל\"מ","מספר באוצר"],
+        rows: [
+          ["אקסלנס השתלמות","3091","399"],
+          ["אקסלנס גמל — עבודה נוספת","8793","102"],
+          ["אקסלנס גמל — החזר הוצאות","5008","102"],
+        ]
+      },
+      {
+        title: "פירוט קרנות פנסיה — קודי רכיבי שכר",
+        type: "table",
+        columns: ["שם תכנית","מס' קופה בשוק ההון","שכר בסיס","עבודה נוספת","החזר הוצאות","גמל לעבודה נוספת (הסכם קיבוצי)","גמל עצמאית"],
+        rows: [
+          ["הפניקס פנסיה מקיפה","209","8101","8861","5337","6332","1431"],
+          ["הפניקס פנסיה כללית","671","990","8863","5379","6350","1434"],
+        ]
+      }
+    ],
+    notes: []
+  },
+
+  mor: {
+    name: "מור",
+    fullName: "מור גמל ופנסיה בע\"מ",
+    sections: [
+      {
+        title: "קודי אוצר (ת.ה.)",
+        type: "table",
+        columns: ["מוצר","קוד אוצר (ת.ה.)"],
+        rows: [
+          ["מור אלפא תגמולים","8694"],
+          ["מור קרן השתלמות","8700"],
+          ["מור גמל להשקעה","7956"],
+          ["מור פנסיה מקיפה","13908"],
+          ["מור פנסיה כללית","13918"],
+        ],
+        note: "אלו קודי אוצר (ת.ה.) — לא קוד מוסד. קוד מוסד לא נמסר במסמך זה."
+      },
+      {
+        title: "פרטי חשבון בנק להפקדה (מעודכן מ-1.1.2025)",
+        type: "table",
+        columns: ["מוצר","בנק","סניף","מספר חשבון"],
+        rows: [
+          ["גמל, השתלמות וגמל להשקעה (אלפא קוד אוצר 8694 / השתלמות קוד אוצר 8700 / השקעה קוד אוצר 7956)","31","046","943032"],
+          ["פנסיה מקיפה (קוד אוצר 13908)","31","046","940963"],
+          ["פנסיה כללית (קוד אוצר 13918)","31","046","942990"],
+        ]
+      }
+    ],
+    notes: [],
+    links: [
+      {label:"מייל לשאלות סוכנים", url:"mailto:agents@more.co.il"},
+    ]
+  },
+
+  ayalon: {
+    name: "איילון",
+    fullName: "איילון חברה לביטוח בע\"מ",
+    sections: [
+      {
+        title: "פוליסה פיננסית",
+        type: "table",
+        columns: ["מוצר","בנק","סניף","חשבון","קוד מוסד"],
+        rows: [
+          ["פוליסה פיננסית","20","461","641898","639"],
+        ]
+      },
+      {
+        title: "קופות גמל והשתלמות",
+        type: "table",
+        columns: ["מוצר","קוד מוסד","ח\"פ","בנק","סניף","חשבון","שם החשבון"],
+        rows: [
+          ["איילון גמל","31235","517085874","בנק הפועלים (12)","600","698150","איילון קופות"],
+        ]
+      }
+    ],
+    notes: [],
+  },
+
+  hachshara: {
+    name: "הכשרה",
+    fullName: "הכשרה חברה לביטוח בע\"מ",
+    sections: [
+      {
+        title: "פוליסה פיננסית — בסט אינווסט (תוכנית חסכון והשקעה אישי)",
+        type: "table",
+        columns: ["לפקודת","בנק","סניף","חשבון"],
+        rows: [
+          ["הכשרה ביטוח בסט אינווסט","מזרחי (20)","461","277146"],
+        ]
+      }
+    ],
+    notes: [],
+  },
+
+  harel: {
+    name: "הראל",
+    fullName: "הראל ביטוח ופיננסים בע\"מ",
+    sections: [
+      {
+        title: "פרטי חשבון מוצרי צבירה — גמל / קרן השתלמות / פנסיה",
+        type: "table",
+        columns: ["שם מוצר","קוד מוסד","בנק-סניף","מספר חשבון","ח.פ","תיק ניכויים"],
+        rows: [
+          ["הראל קופת גמל","40923","10-800","21020062","500601018","935921908"],
+          ["הראל השתלמות","40923","10-800","21486786","500601547","935921924"],
+          ["קרן חסכון לצבא קבע","40923","10-800","29936831","500604384","936189968"],
+          ["הראל גמל להשקעה","40923","10-800","29988119","500682117","936297241"],
+          ["הראל פנסיה","28417","12-600","496785","500602149","936300367"],
+          ["הראל פנסיה כללית","43626","12-600","444998","500616628","936297274"],
+          ["עתידית פנסיה","23553","12-600","676866","500604475","936301167"],
+          ["קרן ה.ע.ל","24081","12-600","367197","500602834","936005511"],
+          ["מגוון השקעות אישי (כולל תיקון 190) / הראל אינדקס","—","12-600","440188","520004078","930006101"],
+          ["תגמולים לעצמאים","—","31-126","175005","520004078","930006101"],
+        ],
+        note: "בכל מקרה הפרטים הקובעים הם המצוינים ע\"ג טופס ההצטרפות לכל מוצר."
+      }
+    ],
+    notes: [
+      "מוצר הראל אינדקס סגור להצטרפות ופתוח להפקדות חד פעמיות ולשינוי מסלול.",
+      "הפקדות מתבצעות למסלול ברירת המחדל של הקופה (המסלול הכללי); הכספים ישוייכו לפי מסלול ההשקעה שנבחר בהצטרפות או המסלול הקיים בקופה.",
+    ],
+  },
+};
+
+const MISSING = [];
+
+// ---------- render ----------
+
+const nav = document.getElementById('companyNav');
+const mainArea = document.getElementById('mainArea');
+const order = ["clal","altshuler","analyst","yelin","migdal","meitav","phoenix","mor","ayalon","hachshara","harel"];
+
+function renderNav(){
+  order.forEach((key,i)=>{
+    const btn = document.createElement('button');
+    btn.textContent = DATA[key].name;
+    btn.dataset.key = key;
+    if(i===0) btn.classList.add('active');
+    btn.addEventListener('click', ()=> selectCompany(key));
+    nav.appendChild(btn);
+  });
+  if(MISSING.length){
+    const divider = document.createElement('div');
+    divider.className = 'divider';
+    nav.appendChild(divider);
+    const label = document.createElement('div');
+    label.className = 'group-label';
+    label.textContent = 'טרם התקבל';
+    nav.appendChild(label);
+    MISSING.forEach(name=>{
+      const d = document.createElement('div');
+      d.className = 'missing-btn';
+      d.textContent = name;
+      nav.appendChild(d);
+    });
+  }
+}
+
+function makeTable(cols, rows, codeColsIdx){
+  const wrap = document.createElement('div');
+  wrap.className = 'table-scroll';
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const trh = document.createElement('tr');
+  cols.forEach(c=>{
+    const th = document.createElement('th');
+    th.textContent = c;
+    trh.appendChild(th);
+  });
+  thead.appendChild(trh);
+  table.appendChild(thead);
+  const tbody = document.createElement('tbody');
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.dataset.search = r.join(' ').toLowerCase();
+    r.forEach((cell,ci)=>{
+      const td = document.createElement('td');
+      const isCodeCol = ci>0; // all columns except the first (label) treated as data/code style
+      if(isCodeCol && cell && cell !== "—"){
+        td.classList.add('code');
+        const span = document.createElement('span');
+        span.textContent = cell;
+        td.appendChild(span);
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.textContent = 'העתק';
+        btn.addEventListener('click', ()=>copyText(cell, btn));
+        td.appendChild(btn);
+      } else {
+        td.textContent = cell;
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  return wrap;
+}
+
+function copyText(text, btn){
+  navigator.clipboard.writeText(text).then(()=>{
+    const old = btn.textContent;
+    btn.textContent = 'הועתק ✓';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=old; btn.classList.remove('copied');}, 1400);
+  });
+}
+
+function renderCompany(key){
+  const c = DATA[key];
+  const panel = document.createElement('div');
+  panel.className = 'company-panel';
+  panel.id = 'panel-'+key;
+  panel.dataset.key = key;
+
+  const head = document.createElement('div');
+  head.className = 'company-head';
+  head.innerHTML = `<h2>${c.name}</h2><span class="tag">${c.fullName}</span>`;
+  panel.appendChild(head);
+
+  c.sections.forEach(sec=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.search = (sec.title||'').toLowerCase();
+    const h3 = document.createElement('h3');
+    h3.innerHTML = `<span class="dot"></span>${sec.title}`;
+    card.appendChild(h3);
+
+    if(sec.type === 'table'){
+      card.appendChild(makeTable(sec.columns, sec.rows));
+    } else if(sec.type === 'subgrouped'){
+      sec.groups.forEach(g=>{
+        const sg = document.createElement('div');
+        sg.className = 'subgroup';
+        const st = document.createElement('div');
+        st.className = 'subtitle';
+        st.textContent = g.subtitle;
+        sg.appendChild(st);
+        sg.appendChild(makeTable(g.columns, g.rows));
+        if(g.note){
+          const n = document.createElement('div');
+          n.className = 'note';
+          n.textContent = g.note;
+          sg.appendChild(n);
+        }
+        card.appendChild(sg);
+      });
+    }
+
+    if(sec.note){
+      const n = document.createElement('div');
+      n.className = 'note';
+      n.textContent = sec.note;
+      card.appendChild(n);
+    }
+    panel.appendChild(card);
+  });
+
+  if(c.notes && c.notes.length){
+    const card = document.createElement('div');
+    card.className = 'card';
+    const h3 = document.createElement('h3');
+    h3.innerHTML = `<span class="dot"></span>הערות והנחיות`;
+    card.appendChild(h3);
+    c.notes.forEach(t=>{
+      const n = document.createElement('div');
+      n.className = 'note';
+      n.style.marginTop = '8px';
+      n.textContent = t;
+      card.appendChild(n);
+    });
+    panel.appendChild(card);
+  }
+
+  if(c.links && c.links.length){
+    const row = document.createElement('div');
+    row.className = 'links-row';
+    c.links.forEach(l=>{
+      const a = document.createElement('a');
+      a.href = l.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = l.label;
+      row.appendChild(a);
+    });
+    panel.appendChild(row);
+  }
+
+  mainArea.appendChild(panel);
+}
+
+function selectCompany(key){
+  document.querySelectorAll('nav.companies button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.key === key);
+  });
+  document.querySelectorAll('.company-panel').forEach(p=>{
+    p.classList.toggle('active', p.dataset.key === key);
+  });
+}
+
+renderNav();
+order.forEach(renderCompany);
+selectCompany(order[0]);
+
+// ---------- search ----------
+const searchBox = document.getElementById('searchBox');
+searchBox.addEventListener('input', ()=>{
+  const q = searchBox.value.trim().toLowerCase();
+  if(!q){
+    document.querySelectorAll('tr').forEach(tr=>tr.classList.remove('hidden-row'));
+    document.querySelectorAll('.card').forEach(c=>c.classList.remove('hidden-row'));
+    return;
+  }
+  // search across all companies: find matches in rows, auto-switch to first matching company
+  let firstMatchKey = null;
+  order.forEach(key=>{
+    const panel = document.getElementById('panel-'+key);
+    let anyMatchInPanel = false;
+    panel.querySelectorAll('tbody tr').forEach(tr=>{
+      const match = tr.dataset.search && tr.dataset.search.includes(q);
+      tr.classList.toggle('hidden-row', !match);
+      if(match) anyMatchInPanel = true;
+    });
+    // also match company name itself
+    if(DATA[key].name.toLowerCase().includes(q) || DATA[key].fullName.toLowerCase().includes(q)){
+      anyMatchInPanel = true;
+      panel.querySelectorAll('tbody tr').forEach(tr=>tr.classList.remove('hidden-row'));
+    }
+    if(anyMatchInPanel && !firstMatchKey) firstMatchKey = key;
+  });
+  if(firstMatchKey) selectCompany(firstMatchKey);
+});
+</script>
+
+</body>
+</html>
