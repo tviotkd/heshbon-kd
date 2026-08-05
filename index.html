@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מחולל הלוואות וקודי מוסד | קפלן דהאן</title>
+<title>מחולל קודי מוסד ופרטי חשבון | קפלן דהאן</title>
 <style>
   :root{
     --navy:#0f2942;
@@ -498,25 +498,6 @@
     padding:10px 12px;
     margin-top:6px;
   }
-  .chat-bubble.bot .bot-assume{
-    font-size:12px;
-    color:var(--text-dim);
-    margin-bottom:6px;
-  }
-  .chat-bubble.bot .bot-crosslink{
-    all:unset;
-    cursor:pointer;
-    display:inline-block;
-    margin-top:8px;
-    font-size:12px;
-    color:var(--navy);
-    background:var(--gold-light);
-    border:1px solid var(--gold);
-    padding:6px 12px;
-    border-radius:20px;
-    font-weight:600;
-  }
-  .chat-bubble.bot .bot-crosslink:hover{background:var(--gold);}
   .chat-form{
     display:flex;
     gap:8px;
@@ -574,7 +555,7 @@
 <header>
   <div class="inner">
     <div>
-      <h1>מחולל הלוואות וקודי מוסד</h1>
+      <h1>מחולל קודי מוסד ופרטי חשבון</h1>
       <div class="sub">קפלן דהאן — ביטוח ופיננסים | רפרנטית</div>
     </div>
   </div>
@@ -584,7 +565,7 @@
   <main id="mainArea"></main>
 </div>
 
-<footer>מחולל פנימי לשימוש נציגי קפלן דהאן • חישובי הלוואות והנתונים לקודי מוסד/חשבונות מבוססים על מסמכים שהתקבלו מהחברות המנהלות • יש לוודא מול המסמך המקורי / תוצאות חיתום לפני העברות והצעות ללקוח</footer>
+<footer>מחולל פנימי לשימוש נציגי קפלן דהאן • הנתונים מבוססים על מסמכים שהתקבלו מהחברות המנהלות • יש לוודא מול המסמך המקורי לפני העברות בסכומים גדולים</footer>
 
 <script>
 const DATA = {
@@ -1146,265 +1127,6 @@ const DATA = {
   },
 };
 
-// ---------- loan calculation domain ----------
-const PRIME_RATE = 5.0; // נכון ל-06.07.2026 (בסיס בנק ישראל 3.5% + 1.5%) — לעדכן אם התפרסם שינוי
-
-const LOAN_COMPANIES = {
-  meitav: {
-    name: 'מיטב',
-    aliases: ['מיטב'],
-    institutionKey: 'meitav',
-    maxTermYears: 5,
-    methods: ['shpitzer','grace'],
-    margins: { shpitzer:-0.5, grace:-0.5, balloon:null },
-    note: 'תקופה מקסימלית: 5 שנים. שיטות: שפיצר/גרייס בלבד. גמל/גמל להשקעה/השתלמות: פריים-0.5% (טווח עד פריים+2%). קרן פנסיה (לא נזיל): פריים+0.6% (טווח עד פריים+3%). הריבית הסופית תלויה בשאלון זכאות.'
-  },
-  bestinvest: {
-    name: 'Best Invest',
-    aliases: ['best invest','בסט אינווסט','הכשרה'],
-    institutionKey: 'hachshara',
-    maxTermYears: 6,
-    methods: ['shpitzer','grace','balloon'],
-    margins: { shpitzer:-0.5, grace:-0.5, balloon:-0.5 },
-    note: 'תקופה מקסימלית: 72 חודשים. ריבית אחידה לכל מבנה החזר: פריים-0.5% (עד פריים-0.8% לצבירה מעל 1,000,000 ₪).'
-  },
-  more: {
-    name: 'מור',
-    aliases: ['מור'],
-    institutionKey: 'mor',
-    maxTermYears: 7,
-    methods: ['shpitzer','grace','balloon'],
-    margins: { shpitzer:-0.75, grace:-0.75, balloon:-0.75 },
-    note: 'עד 5 שנים: פריים-0.75%. 5–7 שנים (שפיצר/גרייס בלבד): פריים-0.25%. בלון: תמיד פריים-0.75%, וניתן רק כנגד כספים נזילים.'
-  },
-  analyst: {
-    name: 'אנליסט',
-    aliases: ['אנליסט'],
-    institutionKey: 'analyst',
-    maxTermYears: 7,
-    methods: ['shpitzer','balloon'],
-    margins: { shpitzer:-0.4, grace:null, balloon:0.1 },
-    note: 'תקופה מקסימלית: 7 שנים. אין מסלול גרייס נפרד. שפיצר נע בין פריים-0.6% ל-0.4%; בלון בין פריים-0.5% ל-0.5%+.'
-  },
-  phoenix: {
-    name: 'הפניקס',
-    aliases: ['הפניקס','פניקס'],
-    institutionKey: 'phoenix',
-    maxTermYears: 7,
-    methods: ['shpitzer','grace'],
-    margins: { shpitzer:0.5, grace:0.8, balloon:null },
-    note: 'תקופה מקסימלית: 7 שנים. אין מסלול בלון. ריבית תלויה בתקופה ובנזילות (טווח פריים-0.5% עד פריים+2%).'
-  },
-  harel: {
-    name: 'הראל',
-    aliases: ['הראל'],
-    institutionKey: 'harel',
-    maxTermYears: 7,
-    methods: ['shpitzer','grace','balloon'],
-    margins: { shpitzer:-0.2, grace:-0.2, balloon:-0.2 },
-    note: 'תקופה מקסימלית: 84 חודשים. ריבית אחידה לכל מבנה החזר: עד שנתיים פריים-0.5%, מעל שנתיים פריים-0.2%.'
-  },
-  yelin: {
-    name: 'ילין לפידות',
-    aliases: ['ילין לפידות','ילין'],
-    institutionKey: 'yelin',
-    maxTermYears: 7,
-    methods: ['shpitzer','balloon'],
-    margins: { shpitzer:0, grace:null, balloon:0 },
-    note: 'אין טבלת ריבית קבועה — הריבית נקבעת בהליך חיתום אישי. יש להזין ריבית מפורשת אם ידועה (למשל "בריבית 5%").'
-  }
-};
-
-const METHOD_LABELS = { shpitzer:'שפיצר', balloon:'בלון', grace:'גרייס' };
-
-const INSTITUTION_TO_LOAN = {};
-Object.keys(LOAN_COMPANIES).forEach(k=>{
-  const ik = LOAN_COMPANIES[k].institutionKey;
-  if(ik) INSTITUTION_TO_LOAN[ik] = k;
-});
-
-function computeShpitzer(P, r, n){
-  const pmt = r===0 ? P/n : P*r/(1-Math.pow(1+r,-n));
-  let totalInterest=0, balance=P;
-  for(let i=1;i<=n;i++){
-    const interest = balance*r;
-    let principal = pmt-interest;
-    if(i===n) principal = balance;
-    balance = Math.max(balance-principal,0);
-    totalInterest += interest;
-  }
-  return { pmt, totalInterest, totalPaid: P+totalInterest };
-}
-
-function computeBalloon(P, r, n){
-  const balloonFinal = P*Math.pow(1+r,n);
-  return { balloonFinal, totalInterest: balloonFinal-P, totalPaid: balloonFinal };
-}
-
-function computeGrace(P, r, n){
-  const monthlyInterest = P*r;
-  const finalPayment = monthlyInterest+P;
-  const totalInterest = monthlyInterest*n; // n-1 interest-only months + last month's interest, same monthly amount throughout
-  return { pmt: monthlyInterest, finalPayment, totalInterest, totalPaid: P+totalInterest };
-}
-
-function matchLoanCompany(qLower){
-  for(const key in LOAN_COMPANIES){
-    const c = LOAN_COMPANIES[key];
-    if(c.aliases.some(a=>qLower.includes(a.toLowerCase()))) return key;
-  }
-  return null;
-}
-
-const LOAN_KEYWORDS = ['הלוואה','הלוואת','שפיצר','בלון','גרייס','סילוקין','לוח סילוקין'];
-function isLoanQuestion(qLower){
-  return LOAN_KEYWORDS.some(k=>qLower.includes(k));
-}
-
-function parseLoanQuery(qLower){
-  let rest = qLower;
-
-  const termMatch = rest.match(/(\d+)\s*(שנים|שנה|חודשים|חודש)/);
-  let termMonths = null;
-  if(termMatch){
-    const num = parseInt(termMatch[1]);
-    termMonths = /חוד/.test(termMatch[2]) ? num : num*12;
-    rest = rest.replace(termMatch[0], ' ');
-  }
-
-  const rateMatch = rest.match(/(\d+(?:\.\d+)?)\s*%/);
-  let explicitRate = null;
-  if(rateMatch){
-    explicitRate = parseFloat(rateMatch[1]);
-    rest = rest.replace(rateMatch[0], ' ');
-  }
-
-  const amountMatch = rest.match(/(\d[\d,]*\.?\d*)\s*(אלף|אלפים|מיליון|k)?/i);
-  let amount = null;
-  if(amountMatch && amountMatch[1]){
-    amount = parseFloat(amountMatch[1].replace(/,/g,''));
-    if(amountMatch[2]){
-      const unit = amountMatch[2].toLowerCase();
-      if(unit==='אלף' || unit==='אלפים' || unit==='k') amount *= 1000;
-      else if(unit==='מיליון') amount *= 1000000;
-    }
-  }
-
-  let method = null;
-  if(qLower.includes('שפיצר')) method='shpitzer';
-  else if(qLower.includes('בלון')) method='balloon';
-  else if(qLower.includes('גרייס')) method='grace';
-
-  const companyKey = matchLoanCompany(qLower);
-
-  return { amount, termMonths, explicitRate, method, companyKey };
-}
-
-function renderLoanAnswer(container, q){
-  const qLower = q.toLowerCase();
-  const parsed = parseLoanQuery(qLower);
-  const assumptions = [];
-
-  if(!parsed.amount){
-    const p = document.createElement('div');
-    p.textContent = 'כדי לחשב הלוואה אני צריכה לפחות סכום. למשל: "בלון 50000 ₪ ל-5 שנים במור" או "שפיצר 300 אלף בהראל לריבית 4.5%".';
-    container.appendChild(p);
-    return;
-  }
-  const P = parsed.amount;
-
-  let method = parsed.method;
-  if(!method){ method='shpitzer'; assumptions.push('לא צוינה שיטת החזר — הנחתי שפיצר (ברירת מחדל).'); }
-
-  let termMonths = parsed.termMonths;
-  if(!termMonths){ termMonths = 60; assumptions.push('לא צוינה תקופה — הנחתי 5 שנים (ברירת מחדל).'); }
-  const termYears = termMonths/12;
-
-  const companyKey = parsed.companyKey;
-  const company = companyKey ? LOAN_COMPANIES[companyKey] : null;
-
-  let annualRate;
-  if(parsed.explicitRate!==null){
-    annualRate = parsed.explicitRate;
-  } else if(company && company.margins[method]!==null && company.margins[method]!==undefined){
-    annualRate = PRIME_RATE + company.margins[method];
-  } else if(company){
-    annualRate = PRIME_RATE;
-    assumptions.push(`ל${company.name} אין נתון ריבית קבוע עבור מסלול ${METHOD_LABELS[method]} — השתמשתי בריבית פריים בסיסית (${PRIME_RATE.toFixed(2)}%) ללא מרווח. ${company.note}`);
-  } else {
-    annualRate = PRIME_RATE;
-    assumptions.push(`לא זוהתה חברה — השתמשתי בריבית פריים בסיסית (${PRIME_RATE.toFixed(2)}%) ללא מרווח. אפשר לציין שם חברה (למשל "במור") או ריבית מפורשת (למשל "בריבית 4.5%") לחישוב מדויק יותר.`);
-  }
-  if(company && company.maxTermYears && termYears > company.maxTermYears){
-    assumptions.push(`שימו לב: התקופה שביקשת (${termYears} שנים) חורגת מהתקופה המקסימלית של ${company.name} (${company.maxTermYears} שנים) לפי המידע שבידינו.`);
-  }
-  if(company && !company.methods.includes(method)){
-    assumptions.push(`שימו לב: לפי המידע שבידינו, ${company.name} לא מציעה מסלול ${METHOD_LABELS[method]} בנפרד.`);
-  }
-
-  const r = annualRate/100/12;
-  let result, fields;
-  if(method==='shpitzer'){
-    result = computeShpitzer(P, r, termMonths);
-    fields = [
-      ['תשלום חודשי', '₪'+Math.round(result.pmt).toLocaleString('he-IL')],
-      ['סה״כ ריבית', '₪'+Math.round(result.totalInterest).toLocaleString('he-IL')],
-      ['סה״כ החזר כולל', '₪'+Math.round(result.totalPaid).toLocaleString('he-IL')],
-    ];
-  } else if(method==='balloon'){
-    result = computeBalloon(P, r, termMonths);
-    fields = [
-      ['קרן ההלוואה (משולמת בסוף)', '₪'+Math.round(P).toLocaleString('he-IL')],
-      ['סה״כ ריבית (ריבית דריבית)', '₪'+Math.round(result.totalInterest).toLocaleString('he-IL')],
-      ['סכום החזר כולל בסוף', '₪'+Math.round(result.totalPaid).toLocaleString('he-IL')],
-    ];
-  } else {
-    result = computeGrace(P, r, termMonths);
-    fields = [
-      ['תשלום חודשי (ריבית בלבד)', '₪'+Math.round(result.pmt).toLocaleString('he-IL')],
-      ['תשלום אחרון (קרן+ריבית)', '₪'+Math.round(result.finalPayment).toLocaleString('he-IL')],
-      ['סה״כ ריבית לתקופה', '₪'+Math.round(result.totalInterest).toLocaleString('he-IL')],
-    ];
-  }
-
-  if(assumptions.length){
-    const a = document.createElement('div');
-    a.className = 'bot-assume';
-    a.textContent = assumptions.join(' ');
-    container.appendChild(a);
-  }
-
-  const card = document.createElement('div');
-  card.className = 'bot-card';
-  const titleCompany = company ? company.name : 'ריבית פריים כללית';
-  card.innerHTML = `<div class="bot-card-title">${METHOD_LABELS[method]} — ${titleCompany} — ₪${Math.round(P).toLocaleString('he-IL')} ל-${termYears} שנים</div>`;
-  fields.forEach(([label,val])=>{
-    const row = document.createElement('div');
-    row.className = 'bot-field';
-    row.innerHTML = `<span class="bot-field-label">${label}</span><span class="bot-field-value"></span>`;
-    row.querySelector('.bot-field-value').textContent = val;
-    card.appendChild(row);
-  });
-  const rateRow = document.createElement('div');
-  rateRow.className = 'bot-field';
-  rateRow.innerHTML = `<span class="bot-field-label">ריבית שנתית בשימוש</span><span class="bot-field-value"></span>`;
-  rateRow.querySelector('.bot-field-value').textContent = annualRate.toFixed(2)+'%';
-  card.insertBefore(rateRow, card.firstChild.nextSibling);
-  container.appendChild(card);
-
-  // cross-link to institution codes for the same company
-  if(company && company.institutionKey && DATA[company.institutionKey]){
-    const btn = document.createElement('button');
-    btn.className = 'bot-crosslink';
-    btn.textContent = `🔗 להציג גם פרטי חשבון/קוד מוסד של ${company.name}?`;
-    btn.addEventListener('click', ()=>{
-      chatInput.value = `פרטי חשבון של ${DATA[company.institutionKey].name}`;
-      handleChatSubmit(new Event('submit', {cancelable:true}));
-    });
-    container.appendChild(btn);
-  }
-}
-
 const MISSING = [];
 
 // ---------- render ----------
@@ -1457,7 +1179,7 @@ function buildKnowledgeBase(){
     const c = DATA[key];
     getCompanyProducts(key).forEach(p=>{
       const searchText = [c.name, c.fullName, p.category, p.label, p.columns.join(' '), p.values.join(' ')].join(' ').toLowerCase();
-      kb.push({ domain:'מוסד', domainIcon:'🏦', companyKey:key, companyName:c.name, category:p.category, label:p.label, columns:p.columns, values:p.values, searchText });
+      kb.push({ domain:'מוסד', domainIcon:'🏦', companyName:c.name, category:p.category, label:p.label, columns:p.columns, values:p.values, searchText });
     });
   });
   return kb;
@@ -1543,17 +1265,6 @@ function renderBotAnswer(container, result){
       card.appendChild(row);
     });
     container.appendChild(card);
-    const loanKey = INSTITUTION_TO_LOAN[h.companyKey];
-    if(loanKey){
-      const btn = document.createElement('button');
-      btn.className = 'bot-crosslink';
-      btn.textContent = `🔗 לבדוק גם הלוואה מ${LOAN_COMPANIES[loanKey].name}?`;
-      btn.addEventListener('click', ()=>{
-        chatInput.value = `שפיצר 100000 ל-5 שנים ב${LOAN_COMPANIES[loanKey].name}`;
-        handleChatSubmit(new Event('submit', {cancelable:true}));
-      });
-      container.appendChild(btn);
-    }
   } else {
     const intro = document.createElement('div');
     intro.textContent = `מצאתי כמה התאמות (${result.hits.length}) — הנה הפרטים:`;
@@ -1594,12 +1305,8 @@ function handleChatSubmit(e){
   addChatMessage(val, 'user');
   chatInput.value = '';
   const botBubble = addChatMessage('', 'bot');
-  if(isLoanQuestion(val.toLowerCase())){
-    renderLoanAnswer(botBubble, val);
-  } else {
-    const result = answerQuestion(val);
-    renderBotAnswer(botBubble, result);
-  }
+  const result = answerQuestion(val);
+  renderBotAnswer(botBubble, result);
   chatLog.scrollTop = chatLog.scrollHeight;
 }
 
@@ -1609,8 +1316,8 @@ chatView.id = 'chatView';
 chatView.className = 'chat-view active';
 chatView.innerHTML = `
   <div class="chat-head">
-    <h2>💬 מחולל הלוואות וקודי מוסד</h2>
-    <div class="landing-sub">קפלן דהאן — שאלי על חישוב הלוואה או על קוד מוסד/פרטי חשבון, לכל חברה</div>
+    <h2>💬 מחולל קודי מוסד ופרטי חשבון</h2>
+    <div class="landing-sub">קפלן דהאן — שאלי שאלה חופשית על קוד מוסד או פרטי חשבון לכל חברה</div>
   </div>
   <div class="chat-log" id="chatLog"></div>
   <form class="chat-form" id="chatForm">
@@ -1626,10 +1333,10 @@ const chatInput = chatView.querySelector('#chatInput');
 chatForm.addEventListener('submit', handleChatSubmit);
 
 const SUGGESTIONS = [
-  "בלון 50000 ₪ ל-5 שנים במור",
-  "שפיצר 300 אלף בהראל",
   "מה מספר החשבון של מור פנסיה מקיפה",
   "קוד מוסד של הפניקס גמל",
+  "פרטי חשבון של ילין לפידות השתלמות",
+  "בנק וסניף של הראל קופת גמל",
 ];
 const sugWrap = chatView.querySelector('#chatSuggestions');
 SUGGESTIONS.forEach(s=>{
@@ -1638,7 +1345,7 @@ SUGGESTIONS.forEach(s=>{
   b.addEventListener('click', ()=>{ chatInput.value = s; handleChatSubmit(new Event('submit', {cancelable:true})); });
   sugWrap.appendChild(b);
 });
-const WELCOME = 'היי! אני יכולה לעזור בשני דברים: לחשב הלוואה (שפיצר / בלון / גרייס, לפי חברה או ריבית מפורשת), ולמצוא קודי מוסד ופרטי חשבון בנק להפקדות. אפשר לשאול חופשי, למשל "בלון 50000 ₪ ל-5 שנים במור" או "מה מספר החשבון של הראל גמל". במה אפשר לעזור?';
+const WELCOME = 'היי! אני יכולה לעזור במציאת קודי מוסד ופרטי חשבון בנק להפקדות, לכל החברות המנהלות. אפשר לשאול לפי שם חברה, שם מוצר, קוד מוסד או מספר חשבון. במה אפשר לעזור?';
 addChatMessage(WELCOME, 'bot');
 chatLog.lastChild.textContent = WELCOME;
 
