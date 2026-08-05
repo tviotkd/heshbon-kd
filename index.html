@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -88,16 +88,9 @@
   }
 
   .layout{
-    max-width:1100px;
+    max-width:700px;
     margin:0 auto;
     padding:22px 18px 60px;
-    display:grid;
-    grid-template-columns:220px 1fr;
-    gap:22px;
-    align-items:start;
-  }
-  @media (max-width:800px){
-    .layout{grid-template-columns:1fr;}
   }
 
   nav.companies{
@@ -387,6 +380,166 @@
   }
   .all-companies-view .company-panel:last-child{border-bottom:none;}
 
+  .product-mode{margin-bottom:6px;}
+  .product-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:8px;
+    margin-bottom:16px;
+  }
+  .product-btn{
+    all:unset;
+    cursor:pointer;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 10px;
+    text-align:center;
+    font-size:13px;
+    font-weight:600;
+    color:var(--text);
+    transition:border-color .12s, background .12s;
+  }
+  .product-btn:hover{border-color:var(--gold); background:var(--bg);}
+  .product-detail-card{border:1.5px solid var(--gold);}
+  .detail-fields{display:flex; flex-direction:column; gap:0;}
+  .detail-field{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:11px 4px;
+    border-bottom:1px solid var(--line);
+  }
+  .detail-field:last-child{border-bottom:none;}
+  .detail-label{
+    font-size:12.5px;
+    color:var(--text-dim);
+    font-weight:600;
+    flex:0 0 auto;
+    min-width:150px;
+  }
+  .detail-value{
+    font-family:'Consolas','Courier New',monospace;
+    font-weight:700;
+    color:var(--navy);
+    direction:ltr;
+    text-align:left;
+    unicode-bidi:plaintext;
+    flex:1;
+    font-size:14px;
+  }
+  .full-toggle-wrap{margin-top:6px;}
+
+  /* ---- chat mode ---- */
+  .chat-view{display:none; max-width:640px; margin:0 auto;}
+  .chat-view.active{display:block;}
+  .chat-head{text-align:center; margin-bottom:18px;}
+  .chat-head h2{color:var(--navy); font-size:20px; margin:0 0 6px;}
+  .chat-head .landing-sub{margin-bottom:0;}
+  .chat-switch{
+    text-align:center;
+    margin-bottom:16px;
+  }
+  .chat-log{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+    min-height:220px;
+    max-height:min(60vh,520px);
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .chat-bubble{
+    max-width:88%;
+    padding:10px 14px;
+    border-radius:14px;
+    font-size:14px;
+    line-height:1.55;
+    white-space:pre-wrap;
+  }
+  .chat-bubble.user{
+    align-self:flex-end;
+    background:var(--navy);
+    color:#fff;
+    border-bottom-left-radius:4px;
+  }
+  .chat-bubble.bot{
+    align-self:flex-start;
+    background:var(--bg);
+    color:var(--text);
+    border-bottom-right-radius:4px;
+  }
+  .chat-bubble.bot .bot-field{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:4px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .chat-bubble.bot .bot-field:last-child{border-bottom:none;}
+  .chat-bubble.bot .bot-field-label{color:var(--text-dim); font-size:12.5px; font-weight:600;}
+  .chat-bubble.bot .bot-field-value{
+    font-family:'Consolas','Courier New',monospace;
+    font-weight:700;
+    color:var(--navy);
+    direction:ltr;
+    unicode-bidi:plaintext;
+  }
+  .chat-bubble.bot .bot-card-title{font-weight:700; color:var(--navy); margin-bottom:6px; font-size:14.5px;}
+  .chat-bubble.bot .bot-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 12px;
+    margin-top:6px;
+  }
+  .chat-form{
+    display:flex;
+    gap:8px;
+  }
+  .chat-form input{
+    flex:1;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    font-size:14px;
+    font-family:inherit;
+  }
+  .chat-form input:focus{outline:none; border-color:var(--gold);}
+  .chat-form button{
+    all:unset;
+    cursor:pointer;
+    background:var(--navy);
+    color:#fff;
+    padding:12px 22px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:14px;
+  }
+  .chat-form button:hover{background:var(--navy-2);}
+  .chat-suggestions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:10px;
+  }
+  .chat-suggestions button{
+    all:unset;
+    cursor:pointer;
+    font-size:12px;
+    color:var(--navy-2);
+    background:var(--card);
+    border:1px solid var(--line);
+    padding:6px 12px;
+    border-radius:20px;
+  }
+  .chat-suggestions button:hover{background:var(--bg);}
+
   footer{
     text-align:center;
     font-size:12px;
@@ -402,18 +555,13 @@
 <header>
   <div class="inner">
     <div>
-      <h1 id="homeLink" style="cursor:pointer;">מחולל קודי מוסד ופרטי חשבון</h1>
+      <h1>מחולל קודי מוסד ופרטי חשבון</h1>
       <div class="sub">קפלן דהאן — ביטוח ופיננסים | רפרנטית</div>
-    </div>
-    <div class="search-wrap">
-      <input id="searchBox" type="text" placeholder="חיפוש: חברה, מוצר, קוד מוסד או מספר חשבון...">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </div>
   </div>
 </header>
 
 <div class="layout">
-  <nav class="companies" id="companyNav"></nav>
   <main id="mainArea"></main>
 </div>
 
@@ -440,11 +588,13 @@ const DATA = {
           ["קופ\"ג תקציבית","10-800-29993816","pizurim@clal-ins.co.il","10-800-29993816"],
           ["חסכון פיננסי","12-600-480609","TFSaving@Clal-Ins.co.il (בציון מס' פוליסה)","לא רלוונטי"],
         ],
-        note: "דוח פיצול לעמיתים יכלול: ת.ז, שם, עמית בקופה, אחוזי הפקדה בגין כל רכיב, חודש שכר, משכורת, סכום הפקדה. בהפקדה ראשונה יש לצרף טופס הצטרפות מלא."
+        note: "דוח פיצול לעמיתים יכלול: ת.ז, שם, עמית בקופה, אחוזי הפקדה בגין כל רכיב, חודש שכר, משכורת, סכום הפקדה. בהפקדה ראשונה יש לצרף טופס הצטרפות מלא.",
+        rowCategories: ["ביטוח","קרן פנסיה","קרן פנסיה","קרן השתלמות","קופת גמל","קופת גמל","קופת גמל להשקעה","קופת גמל","חיסכון"]
       },
       {
         title: "בנק, סניף ומטבע — טבלת אימות (IL S)",
         type: "table",
+        excludeFromPicker: true,
         columns: ["מוצר","בנק-סניף","חשבון","מטבע"],
         rows: [
           ["ביטוח","12-600","655504","ILS"],
@@ -470,26 +620,17 @@ const DATA = {
     fullName: "אלטשולר שחם גמל ופנסיה בע\"מ",
     sections: [
       {
-        title: "קודי מוסד להקמת הרשאה",
+        title: "קוד מוסד ופרטי חשבון — לפי מוצר",
         type: "table",
-        columns: ["מוצר","קוד מוסד"],
+        columns: ["מוצר","קוד מוסד","בנק / סניף","מספר חשבון"],
         rows: [
-          ["השתלמות","37696"],
-          ["גמל וגמל להשקעה","37695"],
-          ["פנסיה מקיפה וכללית","46990"],
-        ]
-      },
-      {
-        title: "מספרי חשבון להעברה בנקאית לפי מוצר",
-        type: "table",
-        columns: ["מוצר","בנק / סניף","מספר חשבון"],
-        rows: [
-          ["קרן השתלמות","לאומי (10) / 800","214971/91"],
-          ["קופת גמל","לאומי (10) / 800","214970/93"],
-          ["חיסכון פלוס (קופת גמל להשקעה)","לאומי (10) / 800","299479/22"],
-          ["פנסיה מקיפה","לאומי (10) / 800","299294/34"],
-          ["פנסיה כללית","לאומי (10) / 800","299299/24"],
-        ]
+          ["קרן השתלמות","37696","לאומי (10) / 800","214971/91"],
+          ["קופת גמל","37695","לאומי (10) / 800","214970/93"],
+          ["חיסכון פלוס (קופת גמל להשקעה)","37695","לאומי (10) / 800","299479/22"],
+          ["פנסיה מקיפה","46990","לאומי (10) / 800","299294/34"],
+          ["פנסיה כללית","46990","לאומי (10) / 800","299299/24"],
+        ],
+        rowCategories: ["קרן השתלמות","קופת גמל","קופת גמל להשקעה","קרן פנסיה","קרן פנסיה"]
       }
     ],
     links: [
@@ -510,7 +651,8 @@ const DATA = {
           ["קופת גמל להשקעה","07143"],
           ["קופת גמל לחיסכון","56823"],
           ["קרן השתלמות","56816"],
-        ]
+        ],
+        rowCategories: ["קופת גמל להשקעה","קופת גמל","קרן השתלמות"]
       },
       {
         title: "חשבונות עו״ש לפי מסלול השקעה — הפקדה בהעברה בנקאית",
@@ -583,11 +725,13 @@ const DATA = {
         rows: [
           ["קרן השתלמות","לאומי","800","21495687"],
           ["קופת גמל","לאומי","800","21495589"],
-        ]
+        ],
+        rowCategories: ["קרן השתלמות","קופת גמל"]
       },
       {
         title: "קופת גמל להשקעה — חשבון לפי מסלול",
         type: "table",
+        category: "קופת גמל להשקעה",
         columns: ["מסלול","חשבון","בנק / סניף"],
         rows: [
           ["ילין לפידות קופת גמל להשקעה — מסלול כללי","29982333","לאומי / 800"],
@@ -628,6 +772,7 @@ const DATA = {
             rows:[
               ["ביטוח","מגדל קשת","0","שקלי: 241775/88 | מט\"ח: 241775/08"],
             ],
+            rowCategories: ["ביטוח"],
             note: "כתובת למשלוח המחאות: בית דואר הראשונים, פתח תקווה, ת.ד. 9466, מיקוד 4919401."
           },
           {
@@ -637,6 +782,7 @@ const DATA = {
               ["קרן פנסיה","מגדל מקפת אישית","162","293842/59"],
               ["קרן פנסיה","מגדל מקפת משלימה","659","293842/59"],
             ],
+            rowCategories: ["קרן פנסיה","קרן פנסיה"],
             note: "כתובת למשלוח המחאות: בית דואר הראשונים, פתח תקווה, ת.ד. 9467, מיקוד 4919401."
           },
           {
@@ -650,6 +796,7 @@ const DATA = {
               ["קופת גמל לא משלמת לקצבה / קופת גמל לתגמולים ואישית לפיצויים","מגדל לתגמולים בניהול אישי","8887","299206/57"],
               ["קרן השתלמות","מגדל השתלמות בניהול אישי","8889","299206/57"],
             ],
+            rowCategories: ["קרן השתלמות","קופת גמל","קופת גמל","קופת גמל","קופת גמל","קרן השתלמות"],
             note: "כתובת למשלוח המחאות: בית דואר הראשונים, פתח תקווה, ת.ד. 9522, מיקוד 4919401."
           }
         ]
@@ -660,6 +807,7 @@ const DATA = {
         groups: [
           {
             subtitle: "ביטוח מנהלים (מס' אוצר בשוק ההון: 520004896)",
+            category: "ביטוח",
             columns:["תיאור מוטב","מספר מוטב","סמל קופה במל\"מ"],
             rows:[
               ["מנהלים — שכר יסוד","3817","576"],
@@ -669,6 +817,7 @@ const DATA = {
           },
           {
             subtitle: "פנסיה (מקפת) (מס' אוצר בשוק ההון: 162)",
+            category: "קרן פנסיה",
             columns:["תיאור מוטב","מספר מוטב","סמל קופה במל\"מ"],
             rows:[
               ["פנסיה — שכר יסוד","3602","545"],
@@ -678,6 +827,7 @@ const DATA = {
           },
           {
             subtitle: "פנסיה משלימה (מס' אוצר בשוק ההון: 659)",
+            category: "קרן פנסיה",
             columns:["תיאור מוטב","מספר מוטב","סמל קופה במל\"מ"],
             rows:[
               ["פנסיה משלימה — שכר יסוד","3886","371"],
@@ -698,6 +848,7 @@ const DATA = {
       {
         title: "קודי מוסד להקמת הרשאה לחיוב חשבון",
         type: "table",
+        excludeFromPicker: true,
         columns: ["מוצר","קוד מוסד"],
         rows: [
           ["קופת גמל להשקעה","עמית עצמאי: 07267"],
@@ -722,10 +873,12 @@ const DATA = {
               ["קופת גמל","20 - מזרחי","638","100107"],
               ["קרן השתלמות","20 - מזרחי","638","133747"],
               ["קופת גמל להשקעה","20 - מזרחי","631","680726"],
-            ]
+            ],
+            rowCategories: ["קרן פנסיה","קרן פנסיה","קופת גמל","קרן השתלמות","קופת גמל להשקעה"]
           },
           {
             subtitle: "למפקידים דרך בנק מזרחי",
+            excludeFromPicker: true,
             columns:["מוצר","בנק","סניף","חשבון"],
             rows:[
               ["פנסיה מקיפה","20 - מזרחי","461","193447"],
@@ -740,6 +893,7 @@ const DATA = {
       {
         title: "תקרות הפקדה לפי מוצר — שנת 2026 (הטבות מס)",
         type: "table",
+        excludeFromPicker: true,
         columns: ["מוצר","תקרה"],
         rows: [
           ["קרן השתלמות — עצמאי","20,566 ₪ לשנה (לעניין פטור ממס)"],
@@ -758,6 +912,7 @@ const DATA = {
       {
         title: "קוד מוסד כללי",
         type: "table",
+        excludeFromPicker: true,
         columns: ["מוצר","קוד מוסד"],
         rows: [
           ["הכל מלבד גמל והשתלמות","611"],
@@ -776,6 +931,7 @@ const DATA = {
               ["ביטוח","—","930638713","10-800 / 21181520"],
               ["פנסיה","לחיים","930638713","12-600 / 546725"],
             ],
+            rowCategories: ["ביטוח","קרן פנסיה"],
             note: "ביטוח: בביטוחים מנוהלים לא נדרש קוד אישור באוצר — יש לדווח מספר ח.פ חברה מנהלת ואפסים. פנסיה (לחיים): יש להעביר העתק המחאה בנקאית הכולל שם מבוטח + ת.ז לפקס 03-7337976 או finance@fnx.co.il לצורך שיוך הכספים."
           },
           {
@@ -788,7 +944,8 @@ const DATA = {
               ["גמל","הפניקס גמל","102","924640592","20-409 / 136053"],
               ["השתלמות","הפניקס השתלמות","399","935825745","20-461 / 644947"],
               ["גמל להשקעה","הפניקס גמל להשקעה","7904","924640527","20-461 / 586696"],
-            ]
+            ],
+            rowCategories: ["קרן פנסיה","קרן פנסיה","קרן פנסיה","קופת גמל","קרן השתלמות","קופת גמל להשקעה"]
           }
         ]
       },
@@ -800,11 +957,13 @@ const DATA = {
           ["אקסלנס השתלמות","3091","399"],
           ["אקסלנס גמל — עבודה נוספת","8793","102"],
           ["אקסלנס גמל — החזר הוצאות","5008","102"],
-        ]
+        ],
+        rowCategories: ["קרן השתלמות","קופת גמל","קופת גמל"]
       },
       {
         title: "פירוט קרנות פנסיה — קודי רכיבי שכר",
         type: "table",
+        category: "קרן פנסיה",
         columns: ["שם תכנית","מס' קופה בשוק ההון","שכר בסיס","עבודה נוספת","החזר הוצאות","גמל לעבודה נוספת (הסכם קיבוצי)","גמל עצמאית"],
         rows: [
           ["הפניקס פנסיה מקיפה","209","8101","8861","5337","6332","1431"],
@@ -820,27 +979,17 @@ const DATA = {
     fullName: "מור גמל ופנסיה בע\"מ",
     sections: [
       {
-        title: "פרטי חשבון בנק להפקדה (מעודכן מ-1.1.2025)",
+        title: "פרטי חשבון וקוד אוצר (ת.ה.) — לפי מוצר (מעודכן מ-1.1.2025)",
         type: "table",
-        columns: ["מוצר","בנק","סניף","מספר חשבון"],
+        columns: ["מוצר","קוד אוצר (ת.ה.)","בנק","סניף","מספר חשבון"],
         rows: [
-          ["גמל, השתלמות וגמל להשקעה","31","046","943032"],
-          ["פנסיה מקיפה","31","046","940963"],
-          ["פנסיה כללית","31","046","942990"],
-        ]
-      },
-      {
-        title: "קודי אוצר (ת.ה.)",
-        type: "table",
-        compact: true,
-        columns: ["מוצר","קוד אוצר (ת.ה.)"],
-        rows: [
-          ["מור אלפא תגמולים","8694"],
-          ["מור קרן השתלמות","8700"],
-          ["מור גמל להשקעה","7956"],
-          ["מור פנסיה מקיפה","13908"],
-          ["מור פנסיה כללית","13918"],
+          ["מור אלפא תגמולים","8694","31","046","943032"],
+          ["מור קרן השתלמות","8700","31","046","943032"],
+          ["מור גמל להשקעה","7956","31","046","943032"],
+          ["מור פנסיה מקיפה","13908","31","046","940963"],
+          ["מור פנסיה כללית","13918","31","046","942990"],
         ],
+        rowCategories: ["קופת גמל","קרן השתלמות","קופת גמל להשקעה","קרן פנסיה","קרן פנסיה"],
         note: "אלו קודי אוצר (ת.ה.) — לא קוד מוסד. קוד מוסד לא נמסר במסמך זה."
       }
     ],
@@ -857,6 +1006,7 @@ const DATA = {
       {
         title: "פוליסה פיננסית",
         type: "table",
+        category: "פוליסה פיננסית",
         columns: ["מוצר","בנק","סניף","חשבון","קוד מוסד"],
         rows: [
           ["פוליסה פיננסית","20","461","641898","639"],
@@ -865,6 +1015,7 @@ const DATA = {
       {
         title: "קופות גמל והשתלמות",
         type: "table",
+        category: "קופת גמל",
         columns: ["מוצר","קוד מוסד","ח\"פ","בנק","סניף","חשבון","שם החשבון"],
         rows: [
           ["איילון גמל","31235","517085874","בנק הפועלים (12)","600","698150","איילון קופות"],
@@ -881,6 +1032,7 @@ const DATA = {
       {
         title: "פוליסה פיננסית — בסט אינווסט (תוכנית חסכון והשקעה אישי)",
         type: "table",
+        category: "פוליסה פיננסית",
         columns: ["לפקודת","בנק","סניף","חשבון"],
         rows: [
           ["הכשרה ביטוח בסט אינווסט","מזרחי (20)","461","277146"],
@@ -910,7 +1062,8 @@ const DATA = {
           ["מגוון השקעות אישי (כולל תיקון 190) / הראל אינדקס","—","12-600","440188","520004078","930006101"],
           ["תגמולים לעצמאים","—","31-126","175005","520004078","930006101"],
         ],
-        note: "בכל מקרה הפרטים הקובעים הם המצוינים ע\"ג טופס ההצטרפות לכל מוצר."
+        note: "בכל מקרה הפרטים הקובעים הם המצוינים ע\"ג טופס ההצטרפות לכל מוצר.",
+        rowCategories: ["קופת גמל","קרן השתלמות","חיסכון","קופת גמל להשקעה","קרן פנסיה","קרן פנסיה","קרן פנסיה","אחר","קופת גמל להשקעה","קופת גמל"]
       }
     ],
     notes: [
@@ -930,6 +1083,7 @@ const DATA = {
         groups: [
           {
             subtitle: "מנורה מבטחים פנסיה (קוד מוסד 37891, תיק ניכויים 936300342)",
+            category: "קרן פנסיה",
             columns:["שם קרן הפנסיה","מ\"ה","חשבון עו\"ש"],
             rows:[
               ["מנורה מבטחים פנסיה (קרן מקיפה) — שכיר","168","29426272"],
@@ -940,6 +1094,7 @@ const DATA = {
           },
           {
             subtitle: "מנורה מבטחים גמל (קוד מוסד 59757, תיק ניכויים 935826529)",
+            category: "קופת גמל",
             columns:["שם קופ\"ג","מ\"ה","חשבון עו\"ש"],
             rows:[
               ["מור מנורה מבטחים לבני עד 50","9789 (1292)","21490996"],
@@ -950,6 +1105,7 @@ const DATA = {
           },
           {
             subtitle: "מנורה מבטחים גמל להשקעה (תיק ניכויים 935366286)",
+            category: "קופת גמל להשקעה",
             columns:["שם קופ\"ג","מ\"ה","חשבון עו\"ש"],
             rows:[
               ["מנורה מבטחים גמל להשקעה","8675","21636108"],
@@ -957,6 +1113,7 @@ const DATA = {
           },
           {
             subtitle: "מנורה מבטחים קרן השתלמות (תיק ניכויים 935825711)",
+            category: "קרן השתלמות",
             columns:["שם קה\"ש","מ\"ה","חשבון עו\"ש"],
             rows:[
               ["מנורה מבטחים השתלמות מסלול כללי","828","21490406"],
@@ -974,282 +1131,233 @@ const MISSING = [];
 
 // ---------- render ----------
 
-const nav = document.getElementById('companyNav');
 const mainArea = document.getElementById('mainArea');
 const order = ["clal","altshuler","analyst","yelin","migdal","meitav","phoenix","mor","ayalon","hachshara","harel","menora"];
 
-function renderNav(){
-  const allBtn = document.createElement('button');
-  allBtn.textContent = "כל החברות";
-  allBtn.dataset.key = "__all__";
-  allBtn.style.background = 'var(--navy)';
-  allBtn.style.color = '#fff';
-  allBtn.addEventListener('click', ()=> selectAll());
-  nav.appendChild(allBtn);
+const STANDARD_CATEGORIES = ["ביטוח","פוליסה פיננסית","קרן פנסיה","קרן השתלמות","קופת גמל","קופת גמל להשקעה","חיסכון","אחר"];
 
-  const navDivider = document.createElement('div');
-  navDivider.className = 'divider';
-  nav.appendChild(navDivider);
-
-  order.forEach((key)=>{
-    const btn = document.createElement('button');
-    btn.textContent = DATA[key].name;
-    btn.dataset.key = key;
-    btn.addEventListener('click', ()=> selectCompany(key));
-    nav.appendChild(btn);
-  });
-  if(MISSING.length){
-    const divider = document.createElement('div');
-    divider.className = 'divider';
-    nav.appendChild(divider);
-    const label = document.createElement('div');
-    label.className = 'group-label';
-    label.textContent = 'טרם התקבל';
-    nav.appendChild(label);
-    MISSING.forEach(name=>{
-      const d = document.createElement('div');
-      d.className = 'missing-btn';
-      d.textContent = name;
-      nav.appendChild(d);
-    });
-  }
-}
-
-function makeTable(cols, rows, codeColsIdx){
-  const wrap = document.createElement('div');
-  wrap.className = 'table-scroll';
-  const table = document.createElement('table');
-  const thead = document.createElement('thead');
-  const trh = document.createElement('tr');
-  cols.forEach(c=>{
-    const th = document.createElement('th');
-    th.textContent = c;
-    trh.appendChild(th);
-  });
-  thead.appendChild(trh);
-  table.appendChild(thead);
-  const tbody = document.createElement('tbody');
-  rows.forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.dataset.search = r.join(' ').toLowerCase();
-    r.forEach((cell,ci)=>{
-      const td = document.createElement('td');
-      const isCodeCol = ci>0; // all columns except the first (label) treated as data/code style
-      if(isCodeCol && cell && cell !== "—"){
-        td.classList.add('code');
-        const span = document.createElement('span');
-        span.textContent = cell;
-        td.appendChild(span);
-        const btn = document.createElement('button');
-        btn.className = 'copy-btn';
-        btn.textContent = 'העתק';
-        btn.addEventListener('click', ()=>copyText(cell, btn));
-        td.appendChild(btn);
-      } else {
-        td.textContent = cell;
-      }
-      tr.appendChild(td);
-    });
-    tbody.appendChild(tr);
-  });
-  table.appendChild(tbody);
-  wrap.appendChild(table);
-  return wrap;
-}
-
-function copyText(text, btn){
-  navigator.clipboard.writeText(text).then(()=>{
-    const old = btn.textContent;
-    btn.textContent = 'הועתק ✓';
-    btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent=old; btn.classList.remove('copied');}, 1400);
-  });
-}
-
-function renderCompany(key){
+function getCompanyProducts(key){
   const c = DATA[key];
-  const panel = document.createElement('div');
-  panel.className = 'company-panel';
-  panel.id = 'panel-'+key;
-  panel.dataset.key = key;
-
-  const backBtn = document.createElement('div');
-  backBtn.className = 'back-to-menu';
-  backBtn.innerHTML = '→ חזרה לתפריט';
-  backBtn.addEventListener('click', showLanding);
-  panel.appendChild(backBtn);
-
-  const head = document.createElement('div');
-  head.className = 'company-head';
-  head.innerHTML = `<h2>${c.name}</h2><span class="tag">${c.fullName}</span>`;
-  panel.appendChild(head);
-
+  const products = [];
   c.sections.forEach(sec=>{
-    const card = document.createElement('div');
-    card.className = 'card' + (sec.compact ? ' compact-card' : '');
-    card.dataset.search = (sec.title||'').toLowerCase();
-    const h3 = document.createElement('h3');
-    h3.innerHTML = `<span class="dot"></span>${sec.title}`;
-    card.appendChild(h3);
-
+    if(sec.excludeFromPicker) return;
     if(sec.type === 'table'){
-      card.appendChild(makeTable(sec.columns, sec.rows));
+      sec.rows.forEach((row,i)=>{
+        const category = (sec.rowCategories && sec.rowCategories[i]) || sec.category || sec.title;
+        products.push({ category, columns: sec.columns, values: row, note: sec.note || null });
+      });
     } else if(sec.type === 'subgrouped'){
       sec.groups.forEach(g=>{
-        const sg = document.createElement('div');
-        sg.className = 'subgroup';
-        const st = document.createElement('div');
-        st.className = 'subtitle';
-        st.textContent = g.subtitle;
-        sg.appendChild(st);
-        sg.appendChild(makeTable(g.columns, g.rows));
-        if(g.note){
-          const n = document.createElement('div');
-          n.className = 'note';
-          n.textContent = g.note;
-          sg.appendChild(n);
-        }
-        card.appendChild(sg);
+        if(g.excludeFromPicker) return;
+        g.rows.forEach((row,i)=>{
+          const category = (g.rowCategories && g.rowCategories[i]) || g.category || g.subtitle;
+          products.push({ category, columns: g.columns, values: row, note: g.note || sec.note || null });
+        });
       });
     }
-
-    if(sec.note){
-      const n = document.createElement('div');
-      n.className = 'note';
-      n.textContent = sec.note;
-      card.appendChild(n);
-    }
-    panel.appendChild(card);
   });
+  const counts = {};
+  products.forEach(p=>{ counts[p.values[0]] = (counts[p.values[0]]||0)+1; });
+  products.forEach(p=>{
+    p.label = (counts[p.values[0]] > 1 && p.values.length > 1) ? (p.values[0] + ' — ' + p.values[1]) : p.values[0];
+    p.context = p.category;
+  });
+  products.sort((a,b)=>{
+    const ia = STANDARD_CATEGORIES.indexOf(a.category); const ib = STANDARD_CATEGORIES.indexOf(b.category);
+    const oa = ia === -1 ? 999 : ia; const ob = ib === -1 ? 999 : ib;
+    return oa - ob;
+  });
+  return products;
+}
 
-  if(c.notes && c.notes.length){
-    const card = document.createElement('div');
-    card.className = 'card';
-    const h3 = document.createElement('h3');
-    h3.innerHTML = `<span class="dot"></span>הערות והנחיות`;
-    card.appendChild(h3);
-    c.notes.forEach(t=>{
-      const n = document.createElement('div');
-      n.className = 'note';
-      n.style.marginTop = '8px';
-      n.textContent = t;
-      card.appendChild(n);
+// ---------- chat engine ----------
+const STOPWORDS = new Set(["מה","מהו","מהי","מהם","של","את","איזה","איזו","איזהו","תן","לי","בבקשה","עבור","אני","רוצה","לדעת","מספר","הוא","היא","הם","גם","עם","יש","לא","כן","ה","ב","ל","מ","ו","זה","זאת","אלו","איך","כמה","נא","תוכל","תוכלי","אפשר"]);
+
+function buildKnowledgeBase(){
+  const kb = [];
+  order.forEach(key=>{
+    const c = DATA[key];
+    getCompanyProducts(key).forEach(p=>{
+      const searchText = [c.name, c.fullName, p.category, p.label, p.columns.join(' '), p.values.join(' ')].join(' ').toLowerCase();
+      kb.push({ domain:'מוסד', domainIcon:'🏦', companyName:c.name, category:p.category, label:p.label, columns:p.columns, values:p.values, searchText });
     });
-    panel.appendChild(card);
+  });
+  return kb;
+}
+let KB = null;
+
+const HEB_PREFIXES = ['ש','כ','ל','מ','ב','ו','ה'];
+function stripPrefixVariants(t){
+  const variants = [t];
+  let cur = t;
+  // strip up to 2 chained single-letter prefixes (e.g. "ולפדיון" -> "לפדיון" -> "פדיון")
+  for(let i=0;i<2;i++){
+    if(cur.length > 3 && HEB_PREFIXES.includes(cur[0])){
+      cur = cur.slice(1);
+      variants.push(cur);
+    } else break;
+  }
+  return variants;
+}
+
+function tokenize(q){
+  return q.toLowerCase().split(/[\s,.\/\-–—:]+/).map(t=>t.trim()).filter(t=>t.length>=2 && !STOPWORDS.has(t));
+}
+
+function answerQuestion(q){
+  if(!KB) KB = buildKnowledgeBase();
+  const qLower = q.toLowerCase();
+
+  // direct account-number style lookup: sequence of 5+ digits
+  const numMatch = qLower.match(/\d{5,}/);
+  if(numMatch){
+    const num = numMatch[0];
+    const hits = KB.filter(item => item.values.some(v => String(v).replace(/[^\d]/g,'').includes(num)));
+    if(hits.length) return { hits, note: null };
   }
 
-  if(c.links && c.links.length){
-    const row = document.createElement('div');
-    row.className = 'links-row';
-    c.links.forEach(l=>{
-      const a = document.createElement('a');
-      a.href = l.url;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.textContent = l.label;
-      row.appendChild(a);
+  const tokens = tokenize(qLower);
+  if(!tokens.length) return { hits: [], note: "לא הבנתי את השאלה — אפשר לנסח מחדש? למשל: \"מה מספר החשבון של מור פנסיה מקיפה\"." };
+
+  let scored = KB.map(item=>{
+    let score = 0;
+    tokens.forEach(t=>{
+      const variants = stripPrefixVariants(t);
+      // use the longest (most specific) variant that actually matches, weight full-length token higher
+      variants.forEach((v,vi)=>{
+        const weight = vi === 0 ? 1 : 0.85; // slight discount for stripped-prefix matches to prefer exact tokens
+        if(item.companyName.toLowerCase().includes(v)) score += 3*weight;
+        if(item.category.toLowerCase().includes(v)) score += 2*weight;
+        if(item.label.toLowerCase().includes(v)) score += 2*weight;
+        if(item.searchText.includes(v)) score += 1*weight;
+      });
     });
-    panel.appendChild(row);
-  }
+    return { item, score };
+  }).filter(s=>s.score>0);
 
-  mainArea.appendChild(panel);
+  if(!scored.length) return { hits: [], note: "לא מצאתי התאמה. נסי לציין שם חברה ומוצר, למשל: \"קוד מוסד של הפניקס גמל\"." };
+
+  scored.sort((a,b)=>b.score-a.score);
+  const topScore = scored[0].score;
+  const hits = scored.filter(s=>s.score === topScore).slice(0,6).map(s=>s.item);
+  return { hits, note: null };
 }
 
-function selectCompany(key){
-  mainArea.classList.remove('all-companies-view');
-  landing.classList.remove('active');
-  document.querySelectorAll('nav.companies button').forEach(b=>{
-    b.classList.toggle('active', b.dataset.key === key);
-  });
-  document.querySelectorAll('.company-panel').forEach(p=>{
-    p.classList.toggle('active', p.dataset.key === key);
-  });
-}
-
-function selectAll(){
-  landing.classList.remove('active');
-  mainArea.classList.add('all-companies-view');
-  document.querySelectorAll('nav.companies button').forEach(b=>{
-    b.classList.toggle('active', b.dataset.key === '__all__');
-  });
-  document.querySelectorAll('.company-panel').forEach(p=>{
-    p.classList.add('active');
-  });
-}
-
-function showLanding(){
-  mainArea.classList.remove('all-companies-view');
-  document.querySelectorAll('nav.companies button').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.company-panel').forEach(p=>p.classList.remove('active'));
-  landing.classList.add('active');
-}
-
-// build landing menu
-const landing = document.createElement('div');
-landing.id = 'landingMenu';
-landing.className = 'landing-grid';
-landing.innerHTML = `
-  <h2>בחרי חברה</h2>
-  <div class="landing-sub">או צפי בכל החברות ברצף אחד</div>
-`;
-const cardsWrap = document.createElement('div');
-cardsWrap.className = 'landing-cards';
-const allCard = document.createElement('button');
-allCard.className = 'all-card';
-allCard.textContent = 'כל החברות';
-allCard.addEventListener('click', selectAll);
-cardsWrap.appendChild(allCard);
-order.forEach(key=>{
-  const card = document.createElement('button');
-  card.textContent = DATA[key].name;
-  card.addEventListener('click', ()=> selectCompany(key));
-  cardsWrap.appendChild(card);
-});
-landing.appendChild(cardsWrap);
-mainArea.appendChild(landing);
-
-document.getElementById('homeLink').addEventListener('click', showLanding);
-
-renderNav();
-order.forEach(renderCompany);
-showLanding();
-
-// ---------- search ----------
-const searchBox = document.getElementById('searchBox');
-searchBox.addEventListener('input', ()=>{
-  const q = searchBox.value.trim().toLowerCase();
-  if(!q){
-    document.querySelectorAll('tr').forEach(tr=>tr.classList.remove('hidden-row'));
-    document.querySelectorAll('.card').forEach(c=>c.classList.remove('hidden-row'));
+function renderBotAnswer(container, result){
+  if(result.note){
+    const p = document.createElement('div');
+    p.textContent = result.note;
+    container.appendChild(p);
     return;
   }
-  // search across all companies: find matches in rows, auto-switch to first matching company
-  let firstMatchKey = null;
-  order.forEach(key=>{
-    const panel = document.getElementById('panel-'+key);
-    let anyMatchInPanel = false;
-    panel.querySelectorAll('tbody tr').forEach(tr=>{
-      const match = tr.dataset.search && tr.dataset.search.includes(q);
-      tr.classList.toggle('hidden-row', !match);
-      if(match) anyMatchInPanel = true;
+  if(result.hits.length === 1){
+    const h = result.hits[0];
+    const card = document.createElement('div');
+    card.className = 'bot-card';
+    card.innerHTML = `<div class="bot-card-title">${h.companyName} — ${h.label}</div>`;
+    h.columns.forEach((colName,i)=>{
+      const val = h.values[i];
+      if(val === undefined || val === '') return;
+      const row = document.createElement('div');
+      row.className = 'bot-field';
+      row.innerHTML = `<span class="bot-field-label">${colName}</span><span class="bot-field-value"></span>`;
+      row.querySelector('.bot-field-value').textContent = val;
+      card.appendChild(row);
     });
-    // also match company name itself
-    if(DATA[key].name.toLowerCase().includes(q) || DATA[key].fullName.toLowerCase().includes(q)){
-      anyMatchInPanel = true;
-      panel.querySelectorAll('tbody tr').forEach(tr=>tr.classList.remove('hidden-row'));
-    }
-    if(anyMatchInPanel && !firstMatchKey) firstMatchKey = key;
-  });
-  if(firstMatchKey) selectCompany(firstMatchKey);
-});
+    container.appendChild(card);
+  } else {
+    const intro = document.createElement('div');
+    intro.textContent = `מצאתי כמה התאמות (${result.hits.length}) — הנה הפרטים:`;
+    container.appendChild(intro);
+    result.hits.forEach(h=>{
+      const card = document.createElement('div');
+      card.className = 'bot-card';
+      card.innerHTML = `<div class="bot-card-title">${h.companyName} — ${h.label}</div>`;
+      h.columns.forEach((colName,i)=>{
+        const val = h.values[i];
+        if(val === undefined || val === '') return;
+        const row = document.createElement('div');
+        row.className = 'bot-field';
+        row.innerHTML = `<span class="bot-field-label">${colName}</span><span class="bot-field-value"></span>`;
+        row.querySelector('.bot-field-value').textContent = val;
+        card.appendChild(row);
+      });
+      container.appendChild(card);
+    });
+  }
+}
 
-// ---------- prefill search from URL (?q=...) so a link can jump straight to an account number ----------
+function addChatMessage(text, sender){
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble ' + sender;
+  if(sender === 'user'){
+    bubble.textContent = text;
+  }
+  chatLog.appendChild(bubble);
+  chatLog.scrollTop = chatLog.scrollHeight;
+  return bubble;
+}
+
+function handleChatSubmit(e){
+  e.preventDefault();
+  const val = chatInput.value.trim();
+  if(!val) return;
+  addChatMessage(val, 'user');
+  chatInput.value = '';
+  const botBubble = addChatMessage('', 'bot');
+  const result = answerQuestion(val);
+  renderBotAnswer(botBubble, result);
+  chatLog.scrollTop = chatLog.scrollHeight;
+}
+
+// build chat view
+const chatView = document.createElement('div');
+chatView.id = 'chatView';
+chatView.className = 'chat-view active';
+chatView.innerHTML = `
+  <div class="chat-head">
+    <h2>💬 מחולל קודי מוסד ופרטי חשבון</h2>
+    <div class="landing-sub">קפלן דהאן — שאלי שאלה חופשית על קוד מוסד או פרטי חשבון לכל חברה</div>
+  </div>
+  <div class="chat-log" id="chatLog"></div>
+  <form class="chat-form" id="chatForm">
+    <button type="submit">שלח</button>
+    <input type="text" id="chatInput" placeholder="הקלידי שאלה כאן..." autocomplete="off">
+  </form>
+  <div class="chat-suggestions" id="chatSuggestions"></div>
+`;
+mainArea.appendChild(chatView);
+const chatLog = chatView.querySelector('#chatLog');
+const chatForm = chatView.querySelector('#chatForm');
+const chatInput = chatView.querySelector('#chatInput');
+chatForm.addEventListener('submit', handleChatSubmit);
+
+const SUGGESTIONS = [
+  "מה מספר החשבון של מור פנסיה מקיפה",
+  "קוד מוסד של הפניקס גמל",
+  "פרטי חשבון של ילין לפידות השתלמות",
+  "בנק וסניף של הראל קופת גמל",
+];
+const sugWrap = chatView.querySelector('#chatSuggestions');
+SUGGESTIONS.forEach(s=>{
+  const b = document.createElement('button');
+  b.textContent = s;
+  b.addEventListener('click', ()=>{ chatInput.value = s; handleChatSubmit(new Event('submit', {cancelable:true})); });
+  sugWrap.appendChild(b);
+});
+const WELCOME = 'היי! אני יכולה לעזור במציאת קודי מוסד ופרטי חשבון בנק להפקדות, לכל החברות המנהלות. אפשר לשאול לפי שם חברה, שם מוצר, קוד מוסד או מספר חשבון. במה אפשר לעזור?';
+addChatMessage(WELCOME, 'bot');
+chatLog.lastChild.textContent = WELCOME;
+
+setTimeout(()=>{ chatInput.focus(); }, 50);
+
+// ---------- prefill chat from URL (?q=...) so a link can jump straight to an answer ----------
 (function(){
   const params = new URLSearchParams(window.location.search);
   const q = params.get('q');
   if(q){
-    searchBox.value = q;
-    searchBox.dispatchEvent(new Event('input'));
+    chatInput.value = q;
+    handleChatSubmit(new Event('submit', {cancelable:true}));
   }
 })();
 </script>
