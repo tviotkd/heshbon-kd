@@ -88,10 +88,41 @@
   }
 
   .layout{
-    max-width:700px;
+    max-width:1000px;
     margin:0 auto;
     padding:22px 18px 60px;
+    display:grid;
+    grid-template-columns:200px 1fr;
+    gap:20px;
+    align-items:start;
   }
+  .layout.chat-mode{
+    grid-template-columns:1fr;
+    max-width:700px;
+  }
+  .layout.chat-mode nav.companies{display:none;}
+
+  .view-toggle{
+    display:flex;
+    gap:6px;
+    background:rgba(255,255,255,.08);
+    border-radius:10px;
+    padding:4px;
+  }
+  .view-toggle .vt-btn{
+    all:unset;
+    cursor:pointer;
+    padding:8px 14px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:700;
+    color:rgba(255,255,255,.75);
+  }
+  .view-toggle .vt-btn.active{
+    background:var(--gold);
+    color:#fff;
+  }
+  .view-toggle .vt-btn:hover:not(.active){background:rgba(255,255,255,.1);}
 
   nav.companies{
     position:sticky;
@@ -105,6 +136,7 @@
     padding:10px;
   }
   @media (max-width:800px){
+    .layout{grid-template-columns:1fr;}
     nav.companies{
       position:static;
       display:grid;
@@ -558,10 +590,15 @@
       <h1>מחולל קודי מוסד ופרטי חשבון</h1>
       <div class="sub">קפלן דהאן — ביטוח ופיננסים | רפרנטית</div>
     </div>
+    <div class="view-toggle" id="viewToggle">
+      <button type="button" class="vt-btn active" data-view="browse">עיון לפי חברה</button>
+      <button type="button" class="vt-btn" data-view="chat">צ'אט חופשי</button>
+    </div>
   </div>
 </header>
 
 <div class="layout">
+  <nav class="companies" id="companiesNav"></nav>
   <main id="mainArea"></main>
 </div>
 
@@ -721,7 +758,7 @@ const DATA = {
         note: "התעריף תלוי בגובה הצבירה בפועל של העמית/קבוצת העובדים — ניתן לפנות לחברה לבקשת הקטנת דמי ניהול נוספת."
       }
     ],
-    notes: ["אנליסט קופות גמל בע\"מ עוסקת בשיווק פנסיוני (ולא בייעוץ). אין באמור לעיל משום ייעוץ/שיווק פנסיוני."]
+    notes: ["אנליסט קופות גמל בע\"מ עוסקת בשיווק פנסיוני (ולא בייעוץ). אין באמור לעיל משום ייעוץ/שיווק פנסיוני.", "לאנליסט אין קרן פנסיה משלה — היא אינה מופיעה ברשימת קרנות הפנסיה הרשמית של משרד האוצר, ולכן אין לה קוד מוסד לפנסיה."]
   },
 
   yelin: {
@@ -731,31 +768,33 @@ const DATA = {
       {
         title: "פרטי חשבון להפקדה — לפי מוצר",
         type: "table",
-        columns: ["מוצר","בנק","סניף","מספר חשבון"],
+        columns: ["מוצר","קוד מוסד","בנק","סניף","מספר חשבון"],
         rows: [
-          ["קרן השתלמות","לאומי","800","21495687"],
-          ["קופת גמל","לאומי","800","21495589"],
+          ["קרן השתלמות","7729","לאומי","800","21495687"],
+          ["קופת גמל","7729","לאומי","800","21495589"],
         ],
-        rowCategories: ["קרן השתלמות","קופת גמל"]
+        rowCategories: ["קרן השתלמות","קופת גמל"],
+        note: "קוד מוסד 7729 אומת מול טופס ההרשאה לחיוב חשבון הרשמי של ילין לפידות (yl-invest.co.il) — קוד אחיד לכל המוצרים (לא נמצא קוד נפרד לכל מוצר בנפרד)."
       },
       {
         title: "קופת גמל להשקעה — חשבון לפי מסלול",
         type: "table",
         category: "קופת גמל להשקעה",
-        columns: ["מסלול","חשבון","בנק / סניף"],
+        columns: ["מסלול","חשבון","בנק / סניף","קוד מוסד"],
         rows: [
-          ["ילין לפידות קופת גמל להשקעה — מסלול כללי","29982333","לאומי / 800"],
-          ["ילין לפידות קופת גמל להשקעה — מסלול אשראי ואג\"ח","29982627","לאומי / 800"],
-          ["ילין לפידות קופת גמל להשקעה — מסלול אשראי ואג\"ח עם מניות (עד 25% מניות)","29982529","לאומי / 800"],
-          ["ילין לפידות קופת גמל להשקעה — מסלול אג\"ח ממשלות","29982725","לאומי / 800"],
-          ["ילין לפידות קופת גמל להשקעה — מסלול מניות","29982431","לאומי / 800"],
-          ["ילין לפידות קופת גמל להשקעה — מסלול עוקב מדדים גמיש","21857579","לאומי / 800"],
-          ["ילין לפידות קופת גמל להשקעה — מסלול עוקב מדד S&P 500","21914795","לאומי / 800"],
-          ["ילין לפידות קופת גמל להשקעה — מסלול מניות סחיר","21937386","לאומי / 800"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול כללי","29982333","לאומי / 800","7729"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול אשראי ואג\"ח","29982627","לאומי / 800","7729"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול אשראי ואג\"ח עם מניות (עד 25% מניות)","29982529","לאומי / 800","7729"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול אג\"ח ממשלות","29982725","לאומי / 800","7729"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול מניות","29982431","לאומי / 800","7729"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול עוקב מדדים גמיש","21857579","לאומי / 800","7729"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול עוקב מדד S&P 500","21914795","לאומי / 800","7729"],
+          ["ילין לפידות קופת גמל להשקעה — מסלול מניות סחיר","21937386","לאומי / 800","7729"],
         ]
       }
     ],
     notes: [
+      "לילין לפידות אין קרן פנסיה משלה — היא אינה מופיעה ברשימת קרנות הפנסיה הרשמית של משרד האוצר, ולכן אין לה קוד מוסד לפנסיה.",
       "תקרת הפקדה לקופת גמל להשקעה לעמית (ברמת ת.ז) לשנת 2026: 83,641.09 ₪.",
       "הפקדה בהמחאה: לפקודת \"ילין לפידות ניהול קופות גמל בע״מ\", לשלוח למשרדי החברה: מגדל-על, דיזנגוף סנטר 50, תל אביב, מיקוד 6433222 — לא יאוחר מ-5 ימי עסקים לפני תום שנת הכספים.",
       "הפקדה בהעברה בנקאית: יש לציין בפרטי ההעברה את מספר ת.ז של העמית, ולשלוח אסמכתא + שם העמית + ת.ז + מספר חשבון למייל hafkadot@yl-invest.co.il — לא יאוחר משני ימי עסקים לפני תום שנת הכספים.",
@@ -1030,18 +1069,18 @@ const DATA = {
     fullName: "מור גמל ופנסיה בע\"מ",
     sections: [
       {
-        title: "פרטי חשבון וקוד אוצר (ת.ה.) — לפי מוצר (מעודכן מ-1.1.2025)",
+        title: "פרטי חשבון, קוד מוסד וקוד אוצר (ת.ה.) — לפי מוצר (בנק מעודכן מ-1.1.2025)",
         type: "table",
-        columns: ["מוצר","קוד אוצר (ת.ה.)","בנק","סניף","מספר חשבון"],
+        columns: ["מוצר","קוד מוסד","קוד אוצר (ת.ה.)","בנק","סניף","מספר חשבון"],
         rows: [
-          ["מור אלפא תגמולים","8694","31","046","943032"],
-          ["מור קרן השתלמות","8700","31","046","943032"],
-          ["מור גמל להשקעה","7956","31","046","943032"],
-          ["מור פנסיה מקיפה","13908","31","046","940963"],
-          ["מור פנסיה כללית","13918","31","046","942990"],
+          ["מור אלפא תגמולים","57318","8694","31","046","943032"],
+          ["מור קרן השתלמות","57318","8700","31","046","943032"],
+          ["מור גמל להשקעה","57318","7956","31","046","943032"],
+          ["מור פנסיה מקיפה","01878","13908","31","046","940963"],
+          ["מור פנסיה כללית","01875","13918","31","046","942990"],
         ],
         rowCategories: ["קופת גמל","קרן השתלמות","קופת גמל להשקעה","קרן פנסיה","קרן פנסיה"],
-        note: "אלו קודי אוצר (ת.ה.) — לא קוד מוסד. קוד מוסד לא נמסר במסמך זה."
+        note: "קוד מוסד אומת מול עמוד ההנחיות הרשמי של מור (moreinvest.co.il): 57318 להשתלמות/אלפא-תגמולים/גמל להשקעה, 01878 לפנסיה מקיפה, 01875 לפנסיה כללית. פרטי הבנק/הסניף/החשבון וקודי האוצר (ת.ה.) כפי שנמסרו ישירות מהחברה ב-1.1.2025 — אם קוד מוסד השתנה יחד עם עדכון הבנק, יש לוודא מול החברה."
       },
       {
         title: "הסכם דמי ניהול ייעודי — עובדי מדינה (שב\"ס ומשטרה)",
@@ -1265,7 +1304,7 @@ const DATA = {
             ]
           },
           {
-            subtitle: "מנורה מבטחים גמל להשקעה (תיק ניכויים 935366286)",
+            subtitle: "מנורה מבטחים גמל להשקעה (תיק ניכויים 935366286) — קוד מוסד לא אומת, ראו הערה",
             category: "קופת גמל להשקעה",
             columns:["שם קופ\"ג","מ\"ה","חשבון עו\"ש"],
             rows:[
@@ -1273,7 +1312,7 @@ const DATA = {
             ]
           },
           {
-            subtitle: "מנורה מבטחים קרן השתלמות (תיק ניכויים 935825711)",
+            subtitle: "מנורה מבטחים קרן השתלמות (תיק ניכויים 935825711) — קוד מוסד לא אומת, ראו הערה",
             category: "קרן השתלמות",
             columns:["שם קה\"ש","מ\"ה","חשבון עו\"ש"],
             rows:[
@@ -1284,7 +1323,7 @@ const DATA = {
         ]
       }
     ],
-    notes: [],
+    notes: ["קוד מוסד ל'מנורה מבטחים גמל להשקעה' ול'מנורה מבטחים קרן השתלמות' לא אותר במקור פומבי מהימן ולא היה כלול במסמכים שהתקבלו — ייתכן שהוא זהה לקוד המוסד של מנורה מבטחים גמל (59757), אך זה לא אומת. יש לבקש אישור מפורש מהחברה/מהרפרנטית לפני שימוש."],
   },
 };
 
@@ -1296,6 +1335,191 @@ const mainArea = document.getElementById('mainArea');
 const order = ["clal","altshuler","analyst","yelin","migdal","meitav","phoenix","mor","ayalon","hachshara","harel","menora"];
 
 const STANDARD_CATEGORIES = ["ביטוח","פוליסה פיננסית","קרן פנסיה","קרן השתלמות","קופת גמל","קופת גמל להשקעה","חיסכון","אחר"];
+
+// ---------- browse-by-company view ----------
+
+function isNumericish(v){
+  const s = String(v);
+  return /\d/.test(s) && /^[\d\-\/.,%₪\sIL]+$/.test(s);
+}
+
+function renderTable(columns, rows){
+  const wrap = document.createElement('div');
+  wrap.className = 'table-scroll';
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const trh = document.createElement('tr');
+  columns.forEach(colName=>{
+    const th = document.createElement('th');
+    th.textContent = colName;
+    trh.appendChild(th);
+  });
+  thead.appendChild(trh);
+  table.appendChild(thead);
+  const tbody = document.createElement('tbody');
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    r.forEach(v=>{
+      const td = document.createElement('td');
+      if(isNumericish(v)) td.classList.add('code');
+      td.textContent = (v === undefined || v === '') ? '—' : v;
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  return wrap;
+}
+
+function renderNote(text){
+  const div = document.createElement('div');
+  div.className = 'note';
+  div.textContent = text;
+  return div;
+}
+
+function renderSection(sec){
+  const card = document.createElement('div');
+  card.className = 'card';
+  const h3 = document.createElement('h3');
+  h3.innerHTML = '<span class="dot"></span>';
+  h3.appendChild(document.createTextNode(sec.title));
+  card.appendChild(h3);
+
+  if(sec.type === 'table'){
+    card.appendChild(renderTable(sec.columns, sec.rows));
+    if(sec.note) card.appendChild(renderNote(sec.note));
+  } else if(sec.type === 'subgrouped'){
+    if(sec.note) card.appendChild(renderNote(sec.note));
+    sec.groups.forEach(g=>{
+      const sub = document.createElement('div');
+      sub.className = 'subgroup';
+      const st = document.createElement('div');
+      st.className = 'subtitle';
+      st.textContent = g.subtitle;
+      sub.appendChild(st);
+      sub.appendChild(renderTable(g.columns, g.rows));
+      if(g.note) sub.appendChild(renderNote(g.note));
+      card.appendChild(sub);
+    });
+  }
+  return card;
+}
+
+function renderCompanyPanel(key){
+  const c = DATA[key];
+  const panel = document.createElement('div');
+  panel.className = 'company-panel';
+  panel.id = 'panel-' + key;
+
+  const head = document.createElement('div');
+  head.className = 'company-head';
+  head.innerHTML = `<h2>${c.name}</h2><span class="tag">${c.fullName}</span>`;
+  panel.appendChild(head);
+
+  c.sections.forEach(sec=> panel.appendChild(renderSection(sec)));
+
+  if(c.notes && c.notes.length){
+    const notesCard = document.createElement('div');
+    notesCard.className = 'card';
+    const h3 = document.createElement('h3');
+    h3.innerHTML = '<span class="dot"></span>הערות כלליות';
+    notesCard.appendChild(h3);
+    c.notes.forEach(n=> notesCard.appendChild(renderNote(n)));
+    panel.appendChild(notesCard);
+  }
+
+  if(c.links && c.links.length){
+    const row = document.createElement('div');
+    row.className = 'links-row';
+    c.links.forEach(l=>{
+      const a = document.createElement('a');
+      a.href = l.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = l.label;
+      row.appendChild(a);
+    });
+    panel.appendChild(row);
+  }
+
+  return panel;
+}
+
+const browseView = document.createElement('div');
+browseView.id = 'browseView';
+browseView.className = 'browse-content active';
+const companiesNav = document.getElementById('companiesNav');
+
+let activeCompany = order[0];
+
+function showCompany(key){
+  activeCompany = key;
+  browseView.querySelectorAll('.company-panel').forEach(p=>{
+    p.classList.toggle('active', p.id === 'panel-' + key || key === 'all');
+  });
+  browseView.classList.toggle('all-companies-view', key === 'all');
+  companiesNav.querySelectorAll('button[data-company]').forEach(b=>{
+    b.classList.toggle('active', b.dataset.company === key);
+  });
+}
+
+order.forEach(key=>{
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.dataset.company = key;
+  btn.textContent = DATA[key].name;
+  btn.addEventListener('click', ()=> showCompany(key));
+  companiesNav.appendChild(btn);
+  browseView.appendChild(renderCompanyPanel(key));
+});
+
+const allBtn = document.createElement('button');
+allBtn.type = 'button';
+allBtn.dataset.company = 'all';
+allBtn.textContent = 'כל החברות';
+allBtn.style.fontWeight = '700';
+allBtn.addEventListener('click', ()=> showCompany('all'));
+companiesNav.insertBefore(allBtn, companiesNav.firstChild);
+
+if(MISSING.length){
+  const divider = document.createElement('div');
+  divider.className = 'divider';
+  companiesNav.appendChild(divider);
+  const label = document.createElement('div');
+  label.className = 'group-label';
+  label.textContent = 'חסר מידע';
+  companiesNav.appendChild(label);
+  MISSING.forEach(name=>{
+    const span = document.createElement('button');
+    span.className = 'missing-btn';
+    span.type = 'button';
+    span.textContent = name;
+    companiesNav.appendChild(span);
+  });
+}
+
+mainArea.appendChild(browseView);
+showCompany(order[0]);
+
+// ---------- view toggle (browse vs chat) ----------
+const layoutEl = document.querySelector('.layout');
+const viewToggle = document.getElementById('viewToggle');
+function setView(view){
+  const isChat = view === 'chat';
+  layoutEl.classList.toggle('chat-mode', isChat);
+  browseView.style.display = isChat ? 'none' : '';
+  viewToggle.querySelectorAll('.vt-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.view === view);
+  });
+  const chatViewEl = document.getElementById('chatView');
+  if(chatViewEl) chatViewEl.classList.toggle('active', isChat);
+}
+viewToggle.querySelectorAll('.vt-btn').forEach(b=>{
+  b.addEventListener('click', ()=> setView(b.dataset.view));
+});
+setView('browse');
 
 function getCompanyProducts(key){
   const c = DATA[key];
@@ -1474,7 +1698,7 @@ function handleChatSubmit(e){
 // build chat view
 const chatView = document.createElement('div');
 chatView.id = 'chatView';
-chatView.className = 'chat-view active';
+chatView.className = 'chat-view';
 chatView.innerHTML = `
   <div class="chat-head">
     <h2>💬 מחולל קודי מוסד ופרטי חשבון</h2>
